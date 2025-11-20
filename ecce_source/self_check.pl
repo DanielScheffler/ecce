@@ -1,6 +1,6 @@
 :- module(self_check,[must_fail/1,must_succeed/1,perform_self_check/0]).
 /* file: self-check.pro */
-
+:- use_module(library(plunit)).
 :- use_module(bimtools).
 
 :- use_module(library(lists)).
@@ -10,6 +10,7 @@
 :- use_module(homeomorphic).
 %:- use_module(constraints).
 
+:- use_module('tests/homeomorphic_tests').
 
 :- use_package( .('ecce_no_rt') ).
 
@@ -39,8 +40,13 @@ must_succeed(X) :-
 	print('### should have suceeded but failed !'),nl.
 must_succeed(_X).
 
+run_Plunit_tests :-
+    print('Tests started'),nl,
+    run_homeomorphic_tests,
+    print('Tests finisched'),nl.
 
 perform_self_check :-
+   run_Plunit_tests,
    print('Performing Self-Check'),nl,
    self_check(X),
    debug_print(X),print('.'),debug_nl,
