@@ -7,7 +7,6 @@
 
 :- use_module(global_tree).
 :- use_module(calc_chtree).
-:- use_module(homeomorphic).
 %:- use_module(constraints).
 
 :- use_module('tests/homeomorphic_tests').
@@ -41,9 +40,7 @@ must_succeed(X) :-
 must_succeed(_X).
 
 run_Plunit_tests :-
-    print('Tests started'),nl,
-    run_homeomorphic_tests,
-    print('Tests finisched'),nl.
+    run_homeomorphic_tests.
 
 perform_self_check :-
    run_Plunit_tests,

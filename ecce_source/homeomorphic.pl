@@ -37,21 +37,6 @@
 /* homeomorphic_embedded_conjunction/2 */
 /* ----------------------------------- */
 
-self_check(must_fail(homeomorphic_embedded_conjunction([a,q(X,Y)],
-					[s,q(Y,f(X)),p,f(a),q(a,b)]))).
-self_check(must_succeed(homeomorphic_embedded_conjunction([q(X,Y)],[q(Y,f(X))]))).
-self_check(must_succeed(homeomorphic_embedded_conjunction([a,q(X,_Y)],
-					[s,f(a),q(_Y,f(X)),p]))).
-self_check(must_succeed(homeomorphic_embedded_conjunction([q(1,2),q(X,Y)],
-			[q(1,2),q(2,3),q(f(1),f(2)),f(a),q(Y,f(X)),p]))).
-self_check(must_succeed(homeomorphic_embedded_conjunction([],
-					[s,f(a),q(_Y,f(_X)),p]))).
-self_check(must_succeed(homeomorphic_embedded_conjunction([q(X,Y)],
-					[q(X,Y)]))).
-self_check(must_succeed(homeomorphic_embedded_conjunction([q(a,Y)],
-					[q(b,Y),q(c,Y),q(a,Y)]))).
-self_check(must_succeed(homeomorphic_embedded_conjunction([q(a,Y)],
-					[q(b,Y),q(a,Y),q(c,Y)]))).
 
 homeomorphic_embedded_conjunction([],_).
 homeomorphic_embedded_conjunction([PA|PAs],[A|As]) :-
@@ -101,23 +86,6 @@ l_mixtus_term_size([H|T],InS,OutS) :-
 /* ----------------------- */
 /* homeomorphic_embedded/2 */
 /* ----------------------- */
-
-self_check(must_fail(homeomorphic_embedded(p(f(a)),p(a)))).
-self_check(must_fail(homeomorphic_embedded(p(a),p(_X)))).
-self_check(must_fail(homeomorphic_embedded(p(a),p(p(f(g(b,c))))))).
-self_check(must_fail(homeomorphic_embedded(f(a,b),f(g(a,b),c)))).
-self_check(must_succeed(homeomorphic_embedded(a,f(a)))).
-self_check(must_succeed(homeomorphic_embedded(f(X),f(X)))).
-self_check(must_succeed(homeomorphic_embedded(f(X,Y),f(Y,X)))).
-self_check(must_succeed(homeomorphic_embedded(f(X,Y),f(Y,s(X))))).
-self_check(must_succeed(homeomorphic_embedded(f(a,_Y),f([c,b,a],s(_X))))).
-self_check(must_succeed(homeomorphic_embedded(f(f(a)),f(f(a))))).
-self_check(must_succeed(homeomorphic_embedded(q(b),q(1,2,q(f(1,f(b,2,3),3)))))).
-self_check(must_succeed(homeomorphic_embedded(q(b),q(1,q(b),b)))).
-self_check(must_succeed(homeomorphic_embedded(q(X),f(a,q(s(X)))))).
-self_check(must_succeed(homeomorphic_embedded(p(1,2,f(3)),
-				p(1,p(s(a,1),f(f(2)),g(a,b,f(3))),3)))).
-self_check(must_succeed(homeomorphic_embedded(q(_X,Y),q(Y,f(_X))))).
 
 /* homeomorphic_embedded(X,Y) :- print(homeomorphic_embedded(X,Y)),nl,fail. */
 
