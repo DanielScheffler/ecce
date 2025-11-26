@@ -94,14 +94,14 @@ widen2(AG,AC,DG,DC,RG,RC) :-
 	keep_entailed([AG=DG|DC],AC,RC),
 	debug_print(kept(RC)),nl,
 	RG = AG,debug_print(ok),nl.
-widen2(AG,AC,DG,DC,RG,RC) :-
+widen2(AG,_,DG,_,RG,RC) :-
 	var(AG),nonvar(DG),!, debug_print(v_nv),debug_nl,
 	RC=[],RG=_.
-widen2(AG,AC,DG,DC,RG,RC) :-
+widen2(AG,_,DG,DC,RG,RC) :-
 	integer(AG),var(DG),!, debug_print(int_v),debug_nl,
 	keep_entailed(DC,[DG#=AG],RC),
 	RG=DG.
-widen2(AG,AC,DG,DC,RG,RC) :-
+widen2(AG,_,DG,_,RG,RC) :-
 	nonvar(AG),var(DG),!, debug_print(nv_v),debug_nl,
 	RC=[],RG=_.
 widen2(AG,AC,DG,DC,RG,RC) :-
