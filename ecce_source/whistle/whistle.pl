@@ -13,7 +13,8 @@
 
 :- use_module('../dynpreds').
 %:- dynamic whistle/4.
-:- multifile available_options/4.
+:- use_module('../abstract/abstract').
+:- multifile abstract:available_options/4.
 :- multifile available_ciaopp_option/3.
 
 :- use_module('whistle.atomhomo.pl').
@@ -73,43 +74,43 @@ available_ciaopp_option(whistle,109,'not-more-general').
 available_ciaopp_option(whistle,117,'off').
 
 
-available_options(whistle,97,
+abstract:available_options(whistle,97,
 	'whistle/whistle.atomhomo.pl',
 	'homeomorphic embedding whistle on Atoms only').
-available_options(whistle,99,
+abstract:available_options(whistle,99,
 	'whistle/whistle.conjhomo.pl',
 	'homeomorphic embedding whistle on Conjunctions').
-available_options(whistle,100,
+abstract:available_options(whistle,100,
 	'whistle/whistle.chconjhomo.pl',
 	'homeomorphic embedding whistle on (pruned+unpruned) Characteristic conjunctions').
-available_options(whistle,112,
+abstract:available_options(whistle,112,
 	'whistle/whistle.chconjhomo-pf.pl',
 	'homeomorphic embedding whistle on (pruned+unpruned) Characteristic conjunctions + blow if pruning factor not sufficient').
-available_options(whistle,102,
+abstract:available_options(whistle,102,
 	'whistle/whistle.chconj-termsize.pl',
 	'homeomorphic embedding whistle on characteristic trees + termsize on conjunctions').
-available_options(whistle,103,
+abstract:available_options(whistle,103,
 	'whistle/whistle.chconj-termsize-unpruned.pl',
 	'homeomorphic embedding whistle on pruned+unpruned characteristic trees + termsize on conjunctions').
 /* available_options(whistle,106,
 	'whistle/whistle.chconj-termsize-set.pl',
 	'set-based homeomorphic embedding whistle on characteristic trees + termsize on conjunctions').*/
-available_options(whistle,101,
+abstract:available_options(whistle,101,
 	'whistle/whistle.eco.pl',
 	'Ecological partial deduction whistle (whistle if atom with same chtree and not strictly more general)(guarantees termination only if number of chtrees is finite!)').
-available_options(whistle,104,
+abstract:available_options(whistle,104,
 	'whistle/whistle.homo.pl',
 	'Homeomorphic embedding whistle on atoms AND chtrees').
-available_options(whistle,109,
+abstract:available_options(whistle,109,
 	'whistle/whistle.notmoregeneral.pl',
 	'blow if atom not More general than ancestor').
-available_options(whistle,115,
+abstract:available_options(whistle,115,
 	'whistle/whistle.set.homo.pl',
 	'Set-based homeomorphic embedding whistle on atoms AND chtrees').
-available_options(whistle,117,
+abstract:available_options(whistle,117,
 	'whistle/whistle.none.pl',
 	'No whistle').
-available_options(whistle,118,
+abstract:available_options(whistle,118,
 	'whistle/whistle.conj-termsize.pl',
 	'just termsize on conjunctions').
 /* available_options(whistle,119,
@@ -119,11 +120,11 @@ available_options(whistle,118,
 		  (no longer available ?)'). */
 
 
-available_options(whistle,110,
+abstract:available_options(whistle,110,
 	'whistle/whistle.finkel.pl',
 	'naive homeo on atoms (for Finkel algorithm)') :- 
 	user_expert(yes).
-available_options(whistle,111,
+abstract:available_options(whistle,111,
 	'whistle/whistle.karp.pl',
 	'naive homeo on atoms (for Karp-Miller algorithm)') :- 
 	user_expert(yes).

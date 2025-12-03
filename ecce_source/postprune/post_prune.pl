@@ -13,7 +13,8 @@
 
 :- use_module('../dynpreds').
 %:- dynamic post_prune_chtree/3.
-:- multifile available_options/4.
+:- use_module('../abstract/abstract').
+:- multifile abstract:available_options/4.
 
 
 :- use_module('post_prune.detidx.minleaves.pl').
@@ -44,32 +45,32 @@ post_prune_chtree(G,C,P) :-
 /* =================== */
 /*     POST PRUNING    */
 /* =================== */
-available_options(postprune,98,
+abstract:available_options(postprune,98,
 	'postprune/post_prune.detidx.minleaves.pl',
 	'combination of (i) indexed det. and (m) minimise leaf atoms  pruning') :- 
 	user_expert(yes).
-available_options(postprune,99,
+abstract:available_options(postprune,99,
 	'postprune/post_prune.minleaves.detidx.pl',
 	'Combination of (m) minimise leaf atoms and (i) indexed det.  pruning') :- 
 	user_expert(yes).
-available_options(postprune,100,
+abstract:available_options(postprune,100,
 	'postprune/post_prune.det.pl',
 	'cut back to Determinate tree').
-available_options(postprune,101,
+abstract:available_options(postprune,101,
 	'postprune/post_prune.no-duplication.pl',
 	'prune such that there is no duplication of work (except maybe for unifications)').
-available_options(postprune,105,
+abstract:available_options(postprune,105,
 	'postprune/post_prune.det-indexed.pl',
 	'cut back to Indexed determinate tree').
-available_options(postprune,109,
+abstract:available_options(postprune,109,
 	'postprune/post_prune.minleaves.pl',
 	'minimise number of descending leaf nodes').
-available_options(postprune,111,
+abstract:available_options(postprune,111,
 	'postprune/post_prune.min-nonv-leaves.pl',
 	'minimise number of non-covered (i.e. new) descending leaf atoms').
-available_options(postprune,110,
+abstract:available_options(postprune,110,
 	'postprune/post_prune.none.pl',
 	'No post unfolding pruning').
-available_options(postprune,120,
+abstract:available_options(postprune,120,
 	'postprune/post_prune.mixtus.pl',
 	'miXtus like (maximum 10 number of clauses for an unfolding step)').

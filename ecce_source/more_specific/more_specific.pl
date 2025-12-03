@@ -13,7 +13,8 @@
 
 :- use_module('../dynpreds').
 %:- dynamic more_specific_transformation/1.
-:- multifile available_options/4.
+:- use_module('../abstract/abstract').
+:- multifile abstract:available_options/4.
 
 :- use_module('more_specific.functionality.pl').
 %:- reexport('more_specific.functionality').
@@ -58,26 +59,26 @@ more_specific_transformation(G) :-
 /* ============ */
 /*      MSV     */
 /* ============ */
-available_options(msv,99,
+abstract:available_options(msv,99,
 	'more_specific/more_specific.conj-msv.pl',
 	'Conjunctive + msv of original program').
 /* available_options(msv,100,
 	'more_specific/more_specific.envunify.pl',
 	'Simple, msg of matching heads + special functionality operations for env_unify predicates') :- 
 	user_expert(yes). */
-available_options(msv,102,
+abstract:available_options(msv,102,
 	'more_specific/more_specific.functionality.pl',
 	'Simple, msg of matching heads + functionality based upon mode declarations (Warning: all modes supposed to be DETERMINATE for the output arguments ! e.g. :- mode f(i,o). means :- mode f(i,o) is determinate.)').
-available_options(msv,110,
+abstract:available_options(msv,110,
 	'more_specific/more_specific.none.pl',
 	'None').
-available_options(msv,115,
+abstract:available_options(msv,115,
 	'more_specific/more_specific.simple.pl',
 	'Simple, msg of matching heads').
-available_options(msv,116,
+abstract:available_options(msv,116,
 	'more_specific/more_specific.simple-msv.pl',
 	'Simple, msg of matching heads + msv of original program').
-available_options(msv,118,
+abstract:available_options(msv,118,
 	'more_specific/more_specific.clpfd.pl',
 	'Simple + check CLP(FD) satisfiability').
 /* available_options(msv,119,

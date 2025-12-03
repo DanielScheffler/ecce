@@ -13,7 +13,8 @@
 
 :- use_module('../dynpreds').
 :- dynamic neg_solve/2.
-:- multifile available_options/4.
+:- use_module('../abstract/abstract').
+:- multifile abstract:available_options/4.
 
 :- use_module('neg_solve.any.pl').
 :- use_module('neg_solve.ground.pl').
@@ -34,16 +35,16 @@ neg_solve(G,SS) :-
 /* ======================= */
 /*      NEGATIVE SOLVE     */
 /* ======================= */
-available_options(negsolve,97,
+abstract:available_options(negsolve,97,
 	'neg_solve/neg_solve.any.pl',
 	'solve ground + unground if empty c.a.s.').
-available_options(negsolve,103,
+abstract:available_options(negsolve,103,
 	'neg_solve/neg_solve.ground.pl',
 	'solve ground (or dead) negative literals (supposes ground negative literals terminate)').
-available_options(negsolve,110,
+abstract:available_options(negsolve,110,
 	'neg_solve/neg_solve.none.pl',
 	'none').
-available_options(negsolve,122,
+abstract:available_options(negsolve,122,
 	'neg_solve/neg_solve.always.pl',
 	'always (be careful about what you are doing !!)') :- 
 	user_expert(yes).

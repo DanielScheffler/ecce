@@ -13,7 +13,8 @@
 
 :- use_module('../dynpreds').
 :- dynamic partition_goal/3.
-:- multifile available_options/4.
+:- use_module('../abstract/abstract').
+:- multifile abstract:available_options/4.
 :- multifile available_ciaopp_option/3.
 
 :- use_module('partition.conjnobi.pl').
@@ -58,37 +59,35 @@ available_ciaopp_option(partition,103,'conj-contig').
 available_ciaopp_option(partition,99,'conj-max').
 
 
-available_options(partition,98,
+abstract:available_options(partition,98,
 	'partition/partition.conjnobi.pl',
 	'conjunctive PD (no built-ins inside conjunctions)').
-available_options(partition,99,
+abstract:available_options(partition,99,
 	'partition/partition.conjunctivepd.pl',
 	'Conjunctive PD (maximally connected sub-goals)').
-available_options(partition,100,
+abstract:available_options(partition,100,
 	'partition/partition.staticconjnobi.pl',
 	'conjunctive PD (only static conjunctions + no built-ins inside conjunctions)').
-available_options(partition,101,
+abstract:available_options(partition,101,
 	'partition/partition.static-contig.pl',
 	'conjunctive PD (only static contiguous conjunctions, no built-ins)').
-available_options(partition,102,
+abstract:available_options(partition,102,
 	'partition/partition.contig.pl',
 	'conjunctive PD (only contiguous conjunctions, no built-ins)').
-available_options(partition,103,
+abstract:available_options(partition,103,
 	'partition/partition.contig-bi.pl',
 	'conjunctive PD (only contiguous conjunctions, with built-ins)').
-available_options(partition,115,
+abstract:available_options(partition,115,
 	'partition/partition.standardpd.pl',
 	'Standard PD (partition into atomic sub-goals)').
-available_options(partition,117,
+abstract:available_options(partition,117,
 	'partition/partition.staticcontig-mdes.pl',
 	'conjunctive PD (only static contiguous conjunctions, no built-ins, require i/o mode link)').
-
-available_options(partition,110,
+abstract:available_options(partition,110,
 	'partition/partition.naive.pl',
 	'naive standard PD (only atoms, make non-ground args fully dynamic)') :- 
 	user_expert(yes).
-
-available_options(partition,120,
+abstract:available_options(partition,120,
 	'partition/partition.clpfd.pl',
 	'conj. PD (only contiguous conj., with built-ins) + project CLP(FD) constraints') :- 
 	user_expert(yes).

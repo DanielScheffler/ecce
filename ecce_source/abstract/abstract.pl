@@ -1,4 +1,4 @@
-:- module(abstract,[abstract_parent/6,abstract_leaf/6]).
+:- module(abstract,[abstract_parent/6,abstract_leaf/6,available_options/4]).
 
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,96,97,98  */

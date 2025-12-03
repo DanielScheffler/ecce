@@ -13,7 +13,8 @@
 
 :- use_module('../dynpreds').
 % :- dynamic get_instance_of/4.
-:- multifile available_options/4.
+:- use_module('../abstract/abstract').
+:- multifile abstract:available_options/4.
 :- multifile available_ciaopp_option/3.
 
 :- use_module('check_instance_of.instance.pl').
@@ -45,16 +46,16 @@ available_ciaopp_option(instchecks,105,'instance-chtree').
 available_ciaopp_option(instchecks,118,'variant-chtree').
 
 
-available_options(instchecks,97,
+abstract:available_options(instchecks,97,
 	'check_instance_of/check_instance_of.instance.pl',
 	'Any instance of a goal').
-available_options(instchecks,105,
+abstract:available_options(instchecks,105,
 	'check_instance_of/check_instance_of.instchtr.pl',
 	'Instance of a goal with same chtree').
-available_options(instchecks,118,
+abstract:available_options(instchecks,118,
 	'check_instance_of/check_instance_of.variant.pl',
 	'Variant of a goal with same chtree').
-available_options(instchecks,121,
+abstract:available_options(instchecks,121,
 	'check_instance_of/check_instance_of.karp.pl',
 	'Variant of a goal with same chtree + slight variation for Karp Miller')
  :- user_expert(yes).
