@@ -117,7 +117,11 @@
         is_inf/1,
         variant_of/2,
         strict_instance_of/2,
-	    read_term_with_lines/3
+	    read_term_with_lines/3,
+		copy/2,
+		string_concatenate/3,
+		ecce_benchmark_directory/1,
+		not/1
 ]).
 
 
@@ -125,7 +129,7 @@
 % DTM: KEEP like this becaus the sicstus expansion has to eliminate them!
 
 :- if(\+ current_prolog_flag(dialect,sicstus)).
-:- export( string_concatenate/3).
+%:- export( string_concatenate/3).
 % :- export( transform_dcg_term/2).
 % :- export( please/2).
 % :- export( rerecord/3).
@@ -135,11 +139,11 @@
 % :- export( stop/0).
 % :- export( time/2).
 % :- export( time/1).
-:- export( copy/2).
+%:- export( copy/2).
 :- export( on_exception/3).
 :- export( expand_term/2).
 :- export( ecce_source_directory/1).
-:- export( ecce_benchmark_directory/1).
+%:- export( ecce_benchmark_directory/1).
 % :- export( instance_of/2).
 % :- export( is_inf/1).
 % :- export( variant_of/2).
@@ -198,14 +202,12 @@
 
 not(Goal) :- \+(Goal).
 
-
-:- if(\+ current_prolog_flag(dialect,sicstus)).
+% Gets switched to sicstus_specific through term expansions
 :- include('bimtools/ciao_specific.pl').
-:- endif.
 
 :- include('bimtools/gensym.pl').
 :- include('bimtools/msg.pl').
-:- include('bimtools/claus_database.pl').
+:- use_module('bimtools/claus_database.pl').
 :- include('bimtools/instance.pl').
 :- include('bimtools/stdlists.pl').
 :- include('bimtools/bd_findall.pl').

@@ -48,9 +48,11 @@
         l_peel_off_calls/2,
         partition_goal/2,
         get_literal_numbers/3,
-        simplify_calln/2, is_calln/1
+        simplify_calln/2, 
+		is_calln/1
 ]).
 
+:- ensure_loaded('sicstus_expansion').
 
 :- use_package( .(ecce_no_rt) ).
 
