@@ -29,6 +29,8 @@
 	    customise/0
 	]).
 
+:- ensure_loaded('sicstus_expansion').
+
 :- use_package( .(ecce_no_rt) ).
 
 /* --------------------------------------------- */

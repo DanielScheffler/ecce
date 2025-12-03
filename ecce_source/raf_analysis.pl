@@ -21,6 +21,8 @@
 	    unsafe_far_erasure/3
 	]).
 
+:- ensure_loaded('sicstus_expansion').
+
 :- use_package( .(ecce_no_rt) ).
 
 
@@ -43,6 +45,7 @@
 :- use_module(code_generator).
 :- use_module(static_dynamic_functors).
 :- use_module(main_functions).
+:- use_module(calc_chtree).
 
 :- use_module(dynpreds).
 

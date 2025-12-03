@@ -5,6 +5,7 @@
 % :- set_prolog_flag(multi_arity_warnings,off).
 % :- set_prolog_flag(discontiguous_warnings,off).
 % :- set_prolog_flag(single_var_warnings,off).
+:- ensure_loaded('sicstus_expansion').
 
 :- use_module(code_generator,
 	[
@@ -326,8 +327,8 @@ front_end([A|P]) :-
 	).
 
 
-list_database :-
-	claus(Nr,Head,Body),
+list_database :-	
+	claus_database:claus(Nr,Head,Body),
 	print(Nr),print(': '),
 	print_clause_with_nl(Head,Body),fail.
 list_database :-

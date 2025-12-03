@@ -46,6 +46,8 @@
         detect_dead_literals_or_non_leftmost_builtins/1
 	]).
 
+:- ensure_loaded('sicstus_expansion').
+
 :- set_prolog_flag(multi_arity_warnings,off).
 %:- set_prolog_flag(discontiguous_warnings,off).
 :- set_prolog_flag(single_var_warnings,off).

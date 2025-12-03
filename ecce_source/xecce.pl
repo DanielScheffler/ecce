@@ -13,6 +13,8 @@
 
 %not(Goal) :- \+(Goal).
 
+:- ensure_loaded('sicstus_expansion').
+
 :- use_package( .('../ecce_no_rt') ).
 
 
@@ -39,7 +41,7 @@ ecce_compile(File) :-
  ecce_source_directory(Dir),
  string_concatenate(Dir,File,CF),!,
  fcompile(CF).
-
+ecce_compile/1,
 ecce_get_parameters(Parameter,Descr,Val) :-
  available_parameters(Parameter,_Char,Descr,_SD,_Default),
  current_parameter_value(Parameter,Val).

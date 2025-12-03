@@ -28,7 +28,6 @@
 	    tcltk_get_slices_to_remove/2,
 	    tcltk_print_sliced_line_numbers/1,
 	    extract_reverse/5,
-	    get_end_of_layout/2,
 	    resultant_body/4,
 	    rename_resultant_goal/4,
 	    make_conjunction/2,
@@ -49,7 +48,8 @@
 	    infix_predicate/1,
 	    simple_assert_spec_clause/2
 	]).
-
+	
+:- ensure_loaded('sicstus_expansion').
 
 :- use_package( .(ecce_no_rt) ).
 
@@ -245,7 +245,6 @@ generate_resultants_for_goal(NodeID,_Goal,FGoal) :-
 	).
 
 
-:- use_module('constraints/constraints_clpfd',[project_and_check_constraint/3]).
 assert_spec_clause(Head,Body) :-
 	(constraints_active
 	 -> (debug_print(call_assert_spec_clause(Head,Body)),debug_nl,

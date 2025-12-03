@@ -40,6 +40,7 @@
 	http://www.cs.kuleuven.ac.be/~michael */
 /* BUG REPORTS, QUESTIONS AND COMMENTS CAN BE SENT TO:
 	michael@cs.kuleuven.ac.be */
+:- ensure_loaded('sicstus_expansion').
 
 
 :- use_package( .('ecce_no_rt') ).
@@ -51,7 +52,6 @@
 
 :- use_module(bimtools).
 
-:- multifile available_options/4.
 :- multifile available_ciaopp_option/3.
 
 :- use_module(parameters).
@@ -225,7 +225,7 @@ choose_parameter(Parameter) :-
 /* ------------------ */
 
 set_parameter(Parameter,Char) :-
-	available_options(Parameter,Char,File,_Descr),!,
+	abstract:available_options(Parameter,Char,File,_Descr),!,
 	%ecce_reconsult(File),
 	update_parameter(Parameter,Char).
 set_parameter(_Parameter,_Char) :-
@@ -238,7 +238,7 @@ set_parameter(_Parameter,_Char) :-
 /* ---------------------------- */
 
 print_available_options(Parameter) :-
-	available_options(Parameter,Char,_File,Descr),
+	abstract:available_options(Parameter,Char,_File,Descr),
 	print('  '),ecce_put(Char),print(': '),
 	print(Descr),nl,fail.
 print_available_options(_).
