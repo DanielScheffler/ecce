@@ -1,58 +1,46 @@
-:- op( 1000 , fx , data ).
+/* Some term_expansions needed to make mecce-ciao run in sicstus again */
+:-if(current_prolog_flag(dialect,sicstus)).
 
 
-term_expansion( :-(initialization( X )) , :-(X) ).
+:- multifile term_expansion/6.
+term_expansion( :-(use_module(library(dec10_io))), L1,T, [], L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module(library(dec10_io))), [] ).
+term_expansion( :-(use_module(library(dynamic))), L1,T, [], L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module(library(dynamic))), [] ).
+term_expansion( :-(use_module(library(aggregates))), L1,T, [], L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module(library(aggregates))), [] ).
+term_expansion( :-(use_module(library(sort))), L1,T, [], L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module(library(sort))), [] ).
+term_expansion( :-(use_module(library(prolog_sys))), L1,T, [], L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module(library(prolog_sys))), [] ).
+term_expansion( :-(use_module(engine(internals))), L1,T, [], L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module(engine(internals))), [] ).
+term_expansion( :-(use_module(engine(internals),_)), L1,T, [], L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module(engine(internals),_)), [] ).
+term_expansion( :-(use_package(_)), L1,T, [], L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_package(_)), [] ).
-
-term_expansion( :-(meta_predicate(_)), [] ).
+term_expansion( :-(meta_predicate(_)), L1,T, [], L1, [remove_ciao|T] ).
  
-term_expansion( :-(set_prolog_flag(multi_arity_warnings,X)) , 
-	        :-(set_prolog_flag(discontiguous_warnings,X)) ).
+term_expansion( :-(set_prolog_flag(multi_arity_warnings,X)) , L1,T, 
+	        :-(set_prolog_flag(discontiguous_warnings,X)), L1, [remove_ciao|T] ).
 
-term_expansion( :-(data(X))    , 
-	        :-(dynamic(X)) ).
+term_expansion( :-(data(X))    , L1,T, 
+	        :-(dynamic(X)), L1, [remove_ciao|T] ).
 
-term_expansion( :-(include('bimtools/ciao_specific.pl')), 
-	        :-(ensure_loaded('bimtools/sicstus_specific.pl')) ).
+term_expansion( :-(include('bimtools/ciao_specific.pl')), L1,T, 
+	        :-(use_module('bimtools/sicstus_specific.pl')), L1, [remove_ciao|T] ).
 
-term_expansion( :-(export(_)), [] ).
+term_expansion( :-(include('ciao_specific.pl')), L1,T, 
+	        :-(use_module('sicstus_specific.pl')), L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module('bimtools/makeflat')) , :-(use_module(makeflat)) ).
+term_expansion( :-(use_module('bimtools/makeflat')) , L1,T, :-(use_module(makeflat)), L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module('bimtools/makeiff')) , :-(use_module(makeiff)) ).
+term_expansion( :-(use_module('bimtools/makeiff')) , L1,T, :-(use_module(makeiff)), L1, [remove_ciao|T] ).
 
-term_expansion( :-(use_module(X)) , :-(ensure_loaded(X)) ) :-
-	X \= library( _ ).
+goal_expansion( retract_fact( X ) , L1 , _ , retract( X ), L1 ).
 
+goal_expansion( asserta_fact( X ), L1 , _ ,  assert( X ), L1 ).
 
+goal_expansion( assertz_fact( X ), L1 , _ ,  assert( X ), L1 ).
 
-%term_expansion( :-(use_module( X )), :-(use_module( Y )) ) :-
-%	X \= library( _ ),
-%	ecce_source_directory(Dir),
-%	atom_concat(Dir,X,Y).
-
-%term_expansion( X , _ ) :-
-%	display( X ) , nl , nl,
-%	fail.
-
-
-goal_expansion( retract_fact( X ) , _ , retract( X ) ).
-
-goal_expansion( asserta_fact( X ) , _ ,  assert( X ) ).
-
-goal_expansion( assertz_fact( X ) , _ ,  assert( X ) ).
+:-endif.	
