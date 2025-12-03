@@ -1,4 +1,4 @@
-:- module(parameters,_).
+:- module(parameters, [available_parameters/5]).
 
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,96,97,98  */

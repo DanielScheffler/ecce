@@ -1,4 +1,9 @@
-:- module(makeflat,_).
+:- module(makeflat,[makeflat/2,
+					makeflatgoal/4,
+					makenewarglistandunifgoals/4,
+					makeflatbody/3,
+					makeunifies/4,
+					prolog_to_flat/2]).
 % Author: Bart Demoen K.U.Leuven
 % Date: March 23 1993
 % Last registered change: March 25 1993

@@ -1,4 +1,7 @@
-:- module( 'whistle.common' , _ ).
+:- module( 'whistle.common' , [not_more_general_conjunction1/2, 
+							goal_naive_homeo/2, 
+							naive_homeo/2, 
+							l_naive_homeo/2] ).
 
 :- use_module( '../bimtools.pl' ).
 :- use_module( '../homeomorphic.pl' ).

@@ -1,4 +1,8 @@
-:- module( 'selectionrule.common' , _ ).
+:- module( 'selectionrule.common' , [get_sel_literal/4,
+									may_loop/2, 
+									stop_may_loop/3, 
+									inf_number/1, 
+									all_may_loop2/3] ).
 
 
 :- use_module( '../calc_chtree' ).

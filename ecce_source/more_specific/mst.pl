@@ -1,4 +1,6 @@
-:- module( mst , _ ).
+:- module(mst, [mst_msg_of_list/2,
+				mst_instantiate_atom/1,
+				mst_matching_heads/2]).
 
 :- use_module( library( aggregates ) ).
 

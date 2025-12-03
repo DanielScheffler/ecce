@@ -1,4 +1,5 @@
-:- module( 'post_prune.common' , _ ).
+:- module( 'post_prune.common' , [post_prune_chtree_minlvs/5,
+								post_prune_chpaths_minlvs/6] ).
 
 :- set_prolog_flag(single_var_warnings,off).
 

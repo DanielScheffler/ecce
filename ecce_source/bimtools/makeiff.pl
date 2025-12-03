@@ -1,4 +1,14 @@
-:- module(makeiff,_).
+:- module(makeiff, [makeiff/2,
+					makeiffbody/3,
+					builtin/1,
+					treatedbuiltin/3,
+					makeiffgoal/4,
+					flat_to_iff/2,
+					fail_iff/0,
+					iff/1,iff/2,
+					iff/3,
+					iff/4,
+					has_semantics/2]).
 
 % Author: Bart Demoen K.U.Leuven
 % Date: March 23 1993

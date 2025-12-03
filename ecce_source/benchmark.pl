@@ -1,4 +1,20 @@
-:- module(benchmark,_).
+:- module(benchmark, [expand_path/2, 
+					write_bench/0, 
+					set_last_bench_path/1, 
+					execute_benchmark/1, 
+					reset_bs_trans_time/0, 
+					execute_benchmark_set/1, 
+					get_bor_log_file_name/1,
+					execute_benchmark/2,
+					pe_twice/1,
+					filter_queries/2,
+					print_bench/2,
+					print_test/2,
+					print_clause_with_nl_nr/3,
+					print_bench_header/1,
+					print_bench_footer/2,
+					generate_csh_command_files/2,
+					generate_csh_commands/2]).
 
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,1996,1997 */

@@ -1,4 +1,7 @@
-:- module( 'abstract.common' , _ ).
+:- module( 'abstract.common' , [get_full_split_indicator/3, 
+                                construct_none_chtrees/2, 
+                                find_minimally_general_element/2, 
+                                not_minimal/2]).
 
 :- use_module( '../bimtools' ).
 :- use_module( '../homeomorphic' ).

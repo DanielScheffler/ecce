@@ -1,4 +1,8 @@
-:- module(depth_bound,_).
+:- module(depth_bound, [depth_bound_ok/1, 
+						list_shorter_than/2, 
+						set_depth_bound/0, 
+						set_new_depth_bound/1, 
+						current_depth_bound/1]).
 
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,1996,1997 */
