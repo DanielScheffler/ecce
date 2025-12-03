@@ -1,3 +1,127 @@
+:- if(current_prolog_flag(version_data,sicstus(3,_,_,_,_))).
+
+	:- module(sicstus_specific, [consult_without_redefine_warning/1,
+						transform_dcg_term/2,
+						max/3,
+						please/2,
+						rerecord/3,
+						namevars/4,
+						hide/0,
+						is_inf/1,
+						varlist/2,
+						varlist2/3,
+						add_var/3,
+						l_varlist2/3,
+						stop/0,
+						time/2,
+						time/1,
+						copy/2,
+						variant_of/2,
+						instance_of/2,
+						strict_instance_of/2,
+						ecce_put/1,
+						ecce_get/1,
+						read_term_with_lines/3,
+						retractall_fact/1,
+						ecce_source_directory/1,
+						ecce_benchmark_directory/1,
+						string_concatenate/3,
+						ensure_consulted/1,
+						ecce_reconsult/1,
+						ecce_compile/1,
+						ecce_use_module/1,
+						ecce_use_module/3,
+						convert_cli_into_atom/2
+						]).
+
+:- else. 
+
+	:- module(sicstus_specific, [consult_without_redefine_warning/1,
+						transform_dcg_term/2,
+						max/3,
+						please/2,
+						rerecord/3,
+						namevars/4,
+						hide/0,
+						is_inf/1,
+						varlist/2,
+						stop/0,
+						time/2,
+						time/1,
+						copy/2,
+						variant_of/2,
+						instance_of/2,
+						strict_instance_of/2,
+						ecce_put/1,
+						ecce_get/1,
+						call_residue/2,
+						filter_residue_vars/2,
+						read_term_with_lines/3,
+						retractall_fact/1,						
+						ecce_source_directory/1,
+						ecce_benchmark_directory/1,
+						string_concatenate/3,
+						ensure_consulted/1,
+						ecce_reconsult/1,
+						ecce_compile/1,
+						ecce_use_module/1,
+						ecce_use_module/3,
+						convert_cli_into_atom/2
+						]).
+
+:- endif.
+
+:- use_module(library(system)).
+:- use_module(library(lists)).
+
+ecce_source_directory(Res) :- environ('ECCE_SOURCE',R),
+  string_concatenate(R,'/',Res).
+ecce_benchmark_directory(Res) :- environ('ECCE_BENCHMARKS',R),
+  string_concatenate(R,'/',Res).
+
+:- mode string_concatenate(i,i,o).
+string_concatenate(X,Y,XY) :-
+   name(X,Xs),name(Y,Ys),append(Xs,Ys,XYs),name(XY,XYs).
+
+ensure_consulted(File) :- 
+	ecce_source_directory(Dir),
+	string_concatenate(Dir,File,CF),!,
+	ensure_loaded(CF).
+
+ecce_reconsult(File) :-
+	ecce_source_directory(Dir),
+	string_concatenate(Dir,File,CF),!,
+	consult_without_redefine_warning(CF).
+
+ecce_compile(File) :-
+	ecce_source_directory(Dir),
+	string_concatenate(Dir,File,CF),!,
+	fcompile(CF).
+
+ecce_use_module(File) :- 
+	ecce_source_directory(Dir),
+	string_concatenate(Dir,File,CF),!,
+	use_module(CF).
+ecce_use_module(File,A1,A2) :- 
+	ecce_source_directory(Dir),
+	string_concatenate(Dir,File,CF),!,
+	use_module(CF,A1,A2).
+
+
+:- if(current_prolog_flag(version_data,sicstus(3,_,_,_,_))).
+	:- use_module(library(charsio),[read_from_chars/2]).
+		convert_cli_into_atom(CLIGOAL,Atom) :-
+			name(CLIGOAL,AsciiL),
+			add_dot(AsciiL,AL2),
+			read_from_chars(AL2,Atom).
+:- else.
+	:- use_module(library(codesio),[read_from_codes/2]).
+		convert_cli_into_atom(CLIGOAL,Atom) :-
+			name(CLIGOAL,AsciiL),
+			add_dot(AsciiL,AL2),
+			read_from_codes(AL2,Atom).
+:- endif.
+
 /* sicstus_specific.pro */
 
 consult_without_redefine_warning(File) :-

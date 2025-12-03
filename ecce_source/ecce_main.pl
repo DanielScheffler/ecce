@@ -1,4 +1,4 @@
-
+:- module(ecce_main, [ecce/0]).
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,96,97,98  */
 /*     [Ported to Ciao by Mauricio Varea, 2003]  */

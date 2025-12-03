@@ -1,8 +1,50 @@
-
+:- module(claus_database, [next_free_clause_nr/2,
+							claus/4,
+							declare_database/1,
+							undeclare_database/1,
+							print_claus_database_status/1,
+							cd/1,
+							clear_database/1,
+							read_database/1,
+							add_new_clause/3,
+							treat_query/2,
+							add_new_mode/2,
+							add_clause/4,
+							claus_layout/2,
+							add_clause_with_layout/5,
+							comma_to_list/2,
+							make_mode_declaration/5,
+							make_iff_when_reading_clauses/1,
+							transform_clause/2,
+							set_make_iff_when_reading_clauses/0,
+							set_make_iff_when_reading_clauses/1,
+							using_ml_typechecker/1,
+							dont_assert/2,
+							strip_body/2,
+							strip_literal/2,
+							using_special_facts/1,
+							special_fact/1,
+							treat_special_fact/1,
+							next_free_clause_nr/1,
+							next_free_mode_nr/1,
+							print_claus_database_status/0,
+							cd/0,
+							clear_database/0,
+							rd/0,
+							read_database/0,
+							read_database/2,
+							add_new_clause/2,
+							treat_query/1,
+							add_new_mode/1,
+							add_clause/3,
+							claus/3,
+							claus/4]). 
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,1996,1997 */
 /* --------------------------------------------- */
 
+:-	ensure_loaded('../sicstus_expansion').
+:-	include('ciao_specific.pl').
 
 /* New version by Helko Lehmann 2002 */
 /* extended to allow the use of multiple clause databases simultaneously */
@@ -422,15 +464,6 @@ treat_query(A) :- treat_query(compat,A).
 add_new_mode(ModedCall) :- add_new_mode(compat,ModedCall).
 
 add_clause(Nr,Head,BodyList) :- add_clause(compat,Nr,Head,BodyList).
-
-
-
-
-
-
-
-
-
 
 
 
