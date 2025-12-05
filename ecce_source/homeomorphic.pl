@@ -25,7 +25,6 @@
 :- set_prolog_flag(discontiguous_warnings,off).
 :- set_prolog_flag(single_var_warnings,off).
 
-:- use_module(self_check).
 
 /* ===================================================== */
 
@@ -98,7 +97,7 @@ homeomorphic_embedded(X,Y) :-
 	nonvar(X),dynamic_term(X),
 	nonvar(Y),dynamic_term(Y),!.
 homeomorphic_embedded(X,Y) :-
-	strict_instance_of(X,Y),!,print('$*'),debug_print('$'(X,Y)),fail.
+	strict_instance_of(X,Y),!,debug_print('$'(X,Y)),fail.
 homeomorphic_embedded(X,Y) :- /* coupling for unary constructors */
 	nonvar(X),nonvar(Y),
 	X=..[Func,XArg],

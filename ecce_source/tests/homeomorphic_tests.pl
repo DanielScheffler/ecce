@@ -1,4 +1,4 @@
-:- module(homeomorphic_tests, [run_homeomorphic_tests/0]).
+:- module(homeomorphic_tests, [run_homeomorphic/2]).
 
 :- use_module(library(plunit)).
 :- use_module('../homeomorphic').
@@ -80,5 +80,5 @@
 
 :- end_tests(homeomorphic_embedded).
 
-run_homeomorphic_tests :-
-    run_tests.
+run_homeomorphic(Passed, Failed) :-
+    run_tests([homeomorphic_embedded_conjunction,homeomorphic_embedded], [passed(Passed), failed(Failed)]).
