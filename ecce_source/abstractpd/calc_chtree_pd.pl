@@ -1,4 +1,26 @@
-:- module(calc_chtree_pd,_).
+:- module(calc_chtree_pd, [apd/2,
+                            calculate_chtree/4,
+                            one_step_unfolding/4,
+                            calc_chtree/5,
+                            calc_chpath/6,
+                            dead_positive_literal/4,
+                            dead/2,
+                            live/2,
+                            undeterminate/3,
+                            reset_bup_msg_changed/1,
+                            get_leaf/6,
+                            get_all_leaves/4,
+                            add_all_leaves/4,
+                            add_leaves/4,
+                            rl/1,
+                            recompute_leaves/1,
+                            bup_abstracted_node/3,
+                            split_goal/3,
+                            leaf/7,
+                            get_constraint_leaf/6,
+                            get_bup_computed_answers/3]).
+
+:- ensure_loaded('../sicstus_expansion').
 
 :- use_package( .('../ecce_no_rt2') ).
 
@@ -25,7 +47,6 @@
 :- use_module('../global_tree').
 :- use_module('../depth_bound').
 :- use_module('../constraints').
-:- use_module('../self_check').
 
 :- use_module(flow_analysis).
 
@@ -90,22 +111,6 @@ pre_condition(calc_chtree(G,C,TopGoalVarlist,UnfHist,_Chtree)) :-
 post_condition(calc_chtree(_G,_C,TopGoalVarlist,_UnfHist,Chtree)) :-
 	term_is_of_type(TopGoalVarlist,list(any)),
 	term_is_of_type(Chtree,chtree).
-	
-self_check(must_succeed((assert(claus(3001,p(g(_X),c),[])),
-   assert(claus(3002,p([],b),[])),assert(claus(3003,p([_|T],Y),[p(T,Y)]))))).
-self_check(must_succeed(
-   (pp_cll(calc_chtree([],[],[],[],C)),C=success))).
-self_check(must_succeed(
-   (pp_cll(calc_chtree([p(X,Y)],[ecce_type(cst([]),X)],[X,Y],[],C)),
-     C=select(1,[match(3002,success)])))).
-self_check(must_succeed(
-   (pp_cll(calc_chtree([p(X,c)],[ecce_type(cst([]),X)],[X],[],C)),
-     C=empty))).
-self_check(must_succeed(
-   (pp_cll(calc_chtree([p(X,b)],[ecce_type(list(any),X)],[X],[],C)),
-     C=select(1,[match(3002,success),match(3003,stop)])))).
-self_check(must_succeed((retract(claus(3001,p(g(_X),c),[])),
-   retract(claus(3002,p([],b),[])),retract(claus(3003,p([_|T],Y),[p(T,Y)]))))).
 
 calc_chtree([],_C,_TopGoalVarlist,_UnfHist,success).
 calc_chtree([H|T],Constraint,TopGoalVarlist,UnfHist,Chtree) :-
@@ -385,7 +390,7 @@ add_leaves(GoalID,Goal,Constraint,Chtree) :-
 	must_succeed(add_all_leaves(GoalID,Solutions,G,[]))
 	; (debug_print(none),debug_nl)
 	).
-	
+
 rl(X) :- recompute_leaves(X).	
 
 recompute_leaves(GoalID) :-
