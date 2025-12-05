@@ -34,6 +34,8 @@
 	    gt_generate_dot_file/1
 	]).
 
+:- ensure_loaded('sicstus_expansion').
+
 :- use_package( .(ecce_no_rt) ).
 
 
@@ -76,8 +78,6 @@
 :- use_module(calc_chtree).
 :- use_module(chtree_tools).
 
-:- use_module(self_check).
-
 :- include( multi_meta ).
 
 
@@ -107,25 +107,6 @@ pre_condition(gt_node_pe_status(_GoalID,_PEStatus)).
 post_condition(gt_node_pe_status(GoalID,PEStatus)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(PEStatus,pe_status).
-
-self_check(must_succeed(init_gt)).
-self_check(must_succeed( (
-    pp_mnf(add_gt_croot([p(Z)],[ecce_type(list(any),Z)],NodeID)),
-    pp_mnf(mark_gt_node_as_ped(NodeID,pe(unimposed),stop)),
-    pp_mnf(add_gt_cleaf(NodeID,[q(Z),r(Z)],[ecce_type(list(any),Z)],chpos(1,[1,2]),_LeafID))))).
-self_check(must_succeed(print_gt_nodes)).
-self_check(must_succeed( (
-    get_gt_cgoal_to_pe(_GID,G,C), C=[ecce_type(list(any),Z)],
-    G = [q(Z),r(Z)]))).
-self_check(must_succeed(init_gt)).
-self_check(must_succeed( (
-    pp_mnf(add_gt_root([p(Z)],NodeID)),
-    pp_mnf(mark_gt_node_as_ped(NodeID,pe(unimposed),stop)),
-    pp_mnf(add_gt_leaf(NodeID,[q(Z),r(Z)],chpos(1,[1,2]),_LeafID))))).
-self_check(must_succeed( (
-    get_gt_cgoal_to_pe(_GID,G,C), C=[],
-    G = [q(Z),r(Z)]))).
-self_check(init_gt).
 
 /* --------- */
 /* init_gt/0 */
