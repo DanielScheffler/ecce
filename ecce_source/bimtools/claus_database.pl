@@ -111,11 +111,14 @@ undeclare_database(Name) :- Name \== compat,
 */
 
 print_claus_database_status(Name) :-
+    nl,
+    print('-------------------'),nl,
+    print('Database Information:'),nl,
 	declared_database(Name),
-        print('database name: '),print(Name),nl,
+        print('name: '),print(Name),nl,
 	next_free_clause_nr(Name,Nr),
 	Total is Nr - 1,
-	print('clauses stored in database: '),print(Total),nl,
+	print('stored clauses: '),print(Total),nl,
 	next_free_mode_nr(Name,MNr),
 	((MNr > 1)
 	-> (MT is MNr - 1,
@@ -124,8 +127,10 @@ print_claus_database_status(Name) :-
 	),
 	(claus(Name,_,_,[])
         -> true
-	; print('database contains *no* facts')),nl.
+	; print('database contains *no* facts'),nl),
+	print('-------------------'),nl.
 
+print_claus_database_status :- print_claus_database_status(compat).
 
 /* -------------- */
 /* clear_database */
@@ -434,8 +439,6 @@ treat_special_fact(Fact) :-
 
 next_free_clause_nr(1).
 next_free_mode_nr(1).
-
-print_claus_database_status :- print_claus_database_status(compat).
 
 cd :- clear_database.
 
