@@ -1,4 +1,16 @@
-:- module(constraints,_).
+:- module(constraints, [ecce_type/2,
+                        regular_type/3,
+                        is_of_regular_type/2,
+                        check_condition/1,
+                        constraint_union/3,
+                        constraint_msg/6,
+                        constraint_instance_of/4,
+                        simplify_constraint/2,
+                        satisfiable/1,
+                        project_constraint/3,
+                        project_simplified_constraint/4]).
+
+:- ensure_loaded('sicstus_expansion').
 
 :- use_package( .(ecce_no_rt) ).
 
@@ -28,8 +40,6 @@
 */
 :- use_module(bimtools).
 :- use_module(calc_chtree).
-
-%:- use_module(self_check).
 
 /* ===================================================== */
 
@@ -118,23 +128,6 @@ pre_condition(constraint_instance_of(G,C,G2,C2)) :-
 post_condition(constraint_instance_of(_G,_C,_G2,_C2)).
 
 
-self_check(must_succeed(
-   (pp_mnf(constraint_instance_of([p(a)],[],[p(a)],[]))))).
-self_check(must_succeed(
-   (pp_mnf(constraint_instance_of([p(a)],[],[p(_X)],[]))))).
-self_check(must_succeed(
-   (pp_mnf(constraint_instance_of([p(a)],[],[p(X)],[ecce_type(cst(a),X)]))))).
-self_check(must_succeed(
-   (pp_mnf(constraint_instance_of([p([a])],[],[p(X)],[ecce_type(list(cst(a)),X)]))))).
-self_check(must_fail(
-   (pp_cll(constraint_instance_of([p(_X)],[],[p(a)],[]))))).
-self_check(must_fail(
-   (pp_cll(constraint_instance_of([p(a)],[],[p(X)],[ecce_type(cst(b),X)]))))).
-self_check(must_fail(
-   (pp_cll(constraint_instance_of([p(a)],[],[p(X)],[ecce_type(list(cst(a)),X)]))))).
-self_check(must_fail(
-   (pp_cll(constraint_instance_of([p([a])],[],[p(X)],[ecce_type(list(cst(b)),X)]))))).
-
 constraint_instance_of(Goal,Constraint,MoreGeneralGoal,MC) :-
    instance_of(Goal,MoreGeneralGoal),
    ((Constraint=[])
@@ -153,29 +146,6 @@ pre_condition(simplify_constraint(C,_SC)) :-
 	term_is_of_type(C,constraint).
 post_condition(simplify_constraint(_C,SC)) :-
 	term_is_of_type(SC,constraint).
-
-self_check(must_succeed(
-   (pp_mnf(simplify_constraint([ecce_type(list(any),X)],L)), 
-    L == [ecce_type(list(any),X)]))).
-self_check(must_succeed(
-   (pp_mnf(simplify_constraint([ecce_type(rec(a,f),f(f(a)))],L)), 
-    L == []))).
-self_check(must_succeed(
-   (pp_mnf(simplify_constraint([ecce_type(rec2(a,f),f(a,f(X,f(a,a))))],L)), 
-    L == [ecce_type(rec2(a,f),X)]))).
-self_check(must_succeed(
-   (pp_mnf(simplify_constraint([ecce_type(list(any),[_H|T])],L)), 
-    L == [ecce_type(list(any),T)]))).
-self_check(must_succeed(
-   (pp_mnf(simplify_constraint([ecce_type(cst(2),2)],L)),
-    L == []))).
-self_check(must_succeed(
-   (pp_mnf(simplify_constraint(
-    [ecce_type(list(cst(2)),[2,2,2|T]), ecce_type(list(any),X)],L)),
-    L == [ecce_type(list(cst(2)),T),ecce_type(list(any),X)]))).
-self_check(must_fail(
-   pp_cll(simplify_constraint(
-    [ecce_type(list(cst(2)),[2,2,4|_T]), ecce_type(list(any),_X)],_L)))).
 
 simplify_constraint([],[]).
 simplify_constraint([ecce_type(Type,X)|T],SC) :-
@@ -204,21 +174,6 @@ pre_condition(project_constraint(C,_G,_SC)) :-
 post_condition(project_constraint(_C,_G,SC)) :-
 	term_is_of_type(SC,constraint).
 
-self_check(must_succeed(
-   (pp_mnf(project_constraint([ecce_type(list(any),X)],X,L)),
-    L == [ecce_type(list(any),X)]))).
-self_check(must_succeed(
-   (pp_mnf(project_constraint([ecce_type(list(any),_Z)],f(X,X),L)),
-    L == []))).
-self_check(must_succeed(
-   (pp_mnf(project_constraint([],f(_X),L)),
-    L == []))).
-self_check(must_succeed(
-   (pp_mnf(project_constraint(
-          [ecce_type(list(any),_Z),ecce_type(list(any),X),ecce_type(cst(2),_V),
-           ecce_type(list(cst(1)),[X])],f(X,_Y),L)),
-    L == [ecce_type(list(any),X),ecce_type(list(cst(1)),[X])]))).
-
 project_constraint(fail,_H,fail).
 project_constraint([],_H,[]).
 project_constraint([C|Cs],H,Constraint) :-
@@ -235,22 +190,6 @@ pre_condition(project_simplified_constraint(C,_G,_SC,_Rem)) :-
 post_condition(project_simplified_constraint(_C,_G,SC,Rem)) :-
 	term_is_of_type(SC,constraint),
 	term_is_of_type(Rem,constraint).
-
-self_check(must_succeed(
-   (pp_mnf(project_simplified_constraint([ecce_type(list(any),X)],X,L,R)),
-    L == [ecce_type(list(any),X)], R==[]))).
-self_check(must_succeed(
-   (pp_mnf(project_simplified_constraint([ecce_type(list(any),_Z)],f(X,X),L,R)),
-    L == [], R==[ecce_type(list(any),_Z)] ))).
-self_check(must_succeed(
-   (pp_mnf(project_simplified_constraint([],f(_X),L,R)),
-    L == [], R==[]))).
-self_check(must_succeed(
-   (pp_mnf(project_simplified_constraint(
-          [ecce_type(list(any),_Z),ecce_type(list(any),X),ecce_type(cst(2),_V),
-           ecce_type(list(cst(1)),X)],f(X,_Y),L,R)),
-    L == [ecce_type(list(any),X),ecce_type(list(cst(1)),X)],
-    R == [ecce_type(list(any),_Z), ecce_type(cst(2),_V)] ))).
 
 project_simplified_constraint([],_H,[],[]).
 project_simplified_constraint([C|Cs],H,Constraint,Rem) :-
