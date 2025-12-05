@@ -1,4 +1,4 @@
-:- module(ecce_main, [ecce/0]).
+:- module(ecce_main, [ecce/0, run_tests/0]).
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,96,97,98  */
 /*     [Ported to Ciao by Mauricio Varea, 2003]  */
@@ -35,7 +35,7 @@ ecce_type(elementary_simplified_constraint,term(ecce_type,[nonvar,var])).
 
 
 :- use_module(parametric_files).
-:- use_module(self_check).
+:- use_module('tests/test_runner').
 
 
 :- include('front_end.pl').

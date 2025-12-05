@@ -15,7 +15,7 @@
 :- initialization(ecce_compile('ecce_main.pro')).
 :- initialization(ecce_compile('raf-analysis.pro')).
 :- initialization(ecce_compile('ecce_sicstus.pro')).
-:- initialization(ecce_compile('self_check.pro')).
+:- initialization(ecce_compile('tests/test_runner.pro')).
 :- initialization(ecce_compile('front_end.pro')).
 :- initialization(ecce_compile('static_conjunction.pro')).
 :- initialization(ecce_compile('global_tree.pro')).

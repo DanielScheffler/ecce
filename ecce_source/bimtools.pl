@@ -166,7 +166,6 @@
 
 
 :-include( multi_meta ).
-:- use_module(self_check).
 
 %:- dynamic spec_clause/3.
 %:- multifile spec_clause/3.
@@ -175,7 +174,7 @@
 :- use_module(homeomorphic).
 :- use_module(global_tree).
 :- use_module(calc_chtree).
-%:- use_module(constraints).
+:- use_module(constraints, [constraint_instance_of/4, simplify_constraint/2, project_constraint/3, project_simplified_constraint/4]).
 :- use_module(determinate_post_unfold).
 :- use_module(post_processor).
 :- use_module(chtree_tools).
@@ -208,8 +207,7 @@ not(Goal) :- \+(Goal).
 :- include('bimtools/gensym.pl').
 :- include('bimtools/msg.pl').
 :- use_module('bimtools/claus_database.pl').
-:- include('bimtools/instance.pl').
-:- include('bimtools/stdlists.pl').
+:- use_module('bimtools/stdlists.pl').
 :- include('bimtools/bd_findall.pl').
 :- include('bimtools/typechecker.pl').
 :- include('bimtools/prepost.pl').

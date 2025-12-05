@@ -72,9 +72,11 @@ main(Inputs) :-
 
 ecce :- main([]).
 
+run_tests :-
+    perform_plunit_tests.
+
 ecce_interactive :-
-	perform_self_check,
-        please(tw,off),
+    please(tw,off),
 	init_bd_findall,
 	seen,
 	see(user),
@@ -91,7 +93,7 @@ ecce_interactive :-
 	print('(C) 1995-2019'),nl,nl,
 	print('Interactive Mode'),nl,
 	print('type h or ? for help'),nl,
-	print('type o to turn off run-time type checking (10x speedup)'),nl,
+	%print('type o to turn off run-time type checking (10x speedup)'),nl,       %currently not working
 	front_end([]),
 	seen,
 	told.
@@ -314,19 +316,21 @@ front_end([]) :- !,
 	prompt(_OldPrompt,''),
 	print('=> '),
 	ecce_get(AsciiChar),
+	nl,
  	(action(AsciiChar)
 	-> true
-	;  format('Unknown command ~w, type h or ? for help',[AsciiChar]),nl,
+	;  char_code(Char, AsciiChar),
+	   format('Unknown command \'~w\', type h or ? for help',[Char]),nl,
 	   front_end([])
 	).
 front_end([A|P]) :-
         char_code(A,Action),debug_print('::'),debug_print(action(Action)),debug_nl,
  	(action(Action,P)
 	-> true
-	;  format('Unknown command ~w, try "ecce h" or "ecce ?" for help',[Action]),nl
-	).
+    ;  format('Unknown command \'~w\', try "ecce h" or "ecce ?" for help',[Action]),nl
+    ).
 
-
+%TODO
 list_database :-	
 	claus_database:claus(Nr,Head,Body),
 	print(Nr),print(': '),
@@ -346,39 +350,49 @@ action(X):- action(X,[]).
 action(10,P) :- % newline 
    front_end(P).
 action(13,P) :- front_end(P).
+action(63,P) :- action_print_help(P).         /* ? for help  */
+action(68,_) :-                            /* D for Database Information */
+    print_claus_database_status, front_end(P).
+action(87,P) :-                             /* eld: W for Write to Isabelle file */
+    print_specialised_program_isa,
+	front_end(P).
+action(97,P) :-                             /* a: toggle treatment of open predicates */
+	toggle_treatment_of_open_predicates,
+	front_end(P).
 action(98,P):- 
 	(exec_mode(compiled) -> P=[RR|PP] ; P=PP),
-	execute_benchmark(RR),  /* b for Benchmark */
+	execute_benchmark(RR),                  /* b for Benchmark */
 	front_end(PP).
-action(99,P):- /* c for clear clause database */
+action(99,P):-                              /* c for clear clause database */
 	clear_database,
 	set_make_iff_definitions_read_in(no),
 	front_end(P).
-action(100,P):- /* d for determinate post-unfolding */
+action(100,P):-                             /* d for determinate post-unfolding */
 	perform_determinate_post_unfolding, front_end(P).
-action(101,P):- /* e for dEbugging */
+action(101,P):-                             /* e for dEbugging */
 	(exec_mode(compiled) -> (P=[F|RR],RR=[S|PP]) ; P=PP),
 	set_debug_printing_value(F), set_trace_printing_value(S), front_end(PP).
-action(102,P) :- /* f */
+action(102,P) :-                            /* f choose a file for Output*/
 	(exec_mode(compiled) -> P=[RR|PP] ; P=PP),
 	set_output_to_file_int(RR),front_end(PP).
-action(103,P):- /* g for print global tree */
+action(103,P):-                             /* g for print global tree */
 	print('Global Tree:'),nl,print_gt_nodes, front_end(P).
-action(105,P):- /* i for insert specialised program into clause db */
+action(104,P) :- action_print_help(P).         /* h for help */
+action(105,P):-                             /* i for insert specialised program into clause db */
 	copy_specialised_program_to_input,
 	print_claus_database_status,
 	front_end(P).
-action(106,P):- /* j create ic-checking clauses */
+action(106,P):-                             /* j create ic-checking clauses */
 	gen_ic_code,
 	front_end(P).
-action(107,P) :- /* k for benchmarkset */
+action(107,P) :-                            /* k for benchmarkset */
 	(exec_mode(compiled) -> P=[RR|PP] ; P=PP),
 	execute_benchmark_set(RR), front_end(PP).
-action(108,P) :- /* l for listing */
+action(108,P) :-                            /* l for listing */
 	print(' Clauses in database:'),nl,
 	list_database,
 	front_end(P).
-action(109,P) :- /* m for msv analysis */
+action(109,P) :-                            /* m for msv analysis */
 	run_msv_anlysis,
 	print('More Specific Version of Program:'),nl,
 	print_specialised_program,
@@ -387,13 +401,16 @@ action(109,P) :- /* m for msv analysis */
 		;  print('No new information !')
 	),nl,
 	front_end(P).
-action(110,P) :- /* n: enable abstract partial deduction */
+action(110,P) :-                            /* n: enable abstract partial deduction */
 	set_standard_config(97),
 	front_end(P).
-action(97,P) :- /* a: toggle treatment of open predicates */
-	toggle_treatment_of_open_predicates,
+action(111,P) :-                            /* o: NOT WORKING YET! needs the implementation of a dispatcher for  %TODO
+	                                             bimtools:prepost (also allocating each part of bimtools into
+                                                separate modules would be a good idea!)*/
+	ecce_reconsult('bimtools/prepost.nocheck.pl'),
+	display( P ) , nl ,nl,
 	front_end(P).
-action(112,P):- /* p: partially evaluate an atom */
+action(112,P):-                             /* p: partially evaluate an atom */
 	last_pd_query(Last),
 	(exec_mode(interactive) 
 	-> (beginner_print('Use list notation for goals: [G1,G2].'),beginner_nl,
@@ -409,14 +426,9 @@ action(112,P):- /* p: partially evaluate an atom */
 	print('Full transformation time (with code generation): '), print(T),
 	print(' ms'),nl,
 	front_end(PP).
-action(111,P) :-  /* o: NOT WORKING YET! needs the implementation of a dispatcher for 
-	             bimtools:prepost (also allocating each part of bimtools into 
-                     separate modules would be a good idea!)*/
-	ecce_reconsult('bimtools/prepost.nocheck.pl'),
-	display( P ) , nl ,nl,
-	front_end(P).
-action(113,_). /* q for quit */
-action(114,P):- /* r for read in file into clause database */
+action(113,_) :-
+    stop.                                   /* q for quit */
+action(114,P):-                             /* r for read in file into clause database */
 	last_read_file(Last),
 	(exec_mode(interactive) 
 	-> beginner_print('Type a dot (.) and hit return at the end.'),beginner_nl,
@@ -426,31 +438,78 @@ action(114,P):- /* r for read in file into clause database */
 	(R=l -> Filename = Last ;  Filename = R),
 	safe_front_end_read_in_file(Filename),
 	front_end(PP).
-action(115,P):- /* s for set parameters */
+action(115,P):-                             /* s for set parameters */
 	set_parameters, front_end(P).
-action(116,P):- /* t  */
+action(116,P):-                             /* t  */
 	set_make_iff_when_reading_clauses, front_end(P).
-action(117,P):- /* u  */
+action(117,P):-                             /* u  */
 	manual_unfold, front_end(P).
-action(118,P):- /* v  */
+action(118,P):-                             /* v  */
 	toggle_user_expert, front_end(P).
-action(119,P) :- /* w for Write to file */
+action(119,P) :-                            /* w for Write to file */
 	print_specialised_program_to_file,
 	front_end(P).
-action(87,P) :- /* eld: W for Write to Isabelle file */
-    print_specialised_program_isa,
-	front_end(P).
-action(121,P):- /* y  */
+action(121,P):-                             /* y  */
 	perform_raf_analysis, front_end(P).
-action(122,P):- /* z  */
+action(122,P):-                             /* z  */
 	perform_andprint_far_analysis, front_end(P).
 
-action(120,_) :- stop. /* x for exit */
 
-action(63,_P) :- action(104). /* ? for help  */
-action(104,P) :- /* h for help */
+action_print_help(P) :-
+    print('---------------------------------------------------------------------------'),nl,
+    print('ECCE'),print_ecce_version,print(' Help'),nl,
+    print('The Partial Evaluator based on Characteristic Atoms and Global Trees'),nl,
+    print('Start system with "--help" to get help on command-line non-interactive use.'),nl,
+    print('---------------------------------------------------------------------------'),nl,
+    print('Command Summary for interactive mode:'),nl,
+
+    print('---------------------------'),nl,
+    print('Database and File Commands:'),nl,
+    print('---------------------------'),nl,
+    print('  c: Clear clause database'),nl,
+    print('  D: Print database information'),nl, /* eld */
+    print('  i: Insert specialised program into clause database'),nl,
+	print('  l: List clause database'),nl,
+    print('  r: Read clauses into database'),nl,
+    print('  w: Write specialised program to file'),nl,
+    print('  W: Write specialised program as Isabelle theory file'),nl, /* eld */
+
+    print('-------------------------------------'),nl,
+    print('Analysis and Transformation Commands:'),nl,
+    print('-------------------------------------'),nl,
+    print('  d: Determinate (post-)unfolding'),nl,
+    print('  g: Print global tree'),nl,
+	print('  m: Perform MSV analysis'),nl,
+	print('  n: Enable abstract partial deduction'),nl,
+    print('  p: Partially evaluate an atom or goal'),nl,
+
+    expert_print('----------------'),expert_nl,
+    expert_print('Expert Commands:'),expert_nl,
+    expert_print('----------------'),expert_nl,
+    expert_print('  a: Toggle treatment of open predicates'),expert_nl,
+    expert_print('  b: Execute Benchmark (from special file)'),expert_nl,
+    expert_print('  j: Generate IC-checking code'),expert_nl,
+    expert_print('  k: Execute benchmark set (from special file)'),expert_nl,
+    expert_print('  t: IFF clause transformation'),expert_nl,
+    expert_print('  u: Manual unfold'),expert_nl,
+    expert_print('  y: Redundant argument filtering (RAF) analysis'),expert_nl,
+    expert_print('  z: FAR (reversed RAF) analysis'),expert_nl,
+
+    print('----------------'),nl,
+    print('System Commands:'),nl,
+    print('----------------'),nl,
+    print('  e: Toggle debugging / tracing'),nl,
+    print('  f: Choose output file'),nl,
+    print('  h: Help (also ?)'),nl,
+    print('  q: Quit '),nl,
+    print('  s: Set parameters'),nl,
+    print('  v: Toggle expert mode'),nl,
+	%print('  o: Toggle type checking'),nl,         %doesnt work
+    (exec_mode(interactive)->front_end(P);true).
+
+/*
 	print(' ECCE 2.0'),nl,
-	print(' The Partial Evaluator based on Characteristic Atoms and Global Trees'),nl,nl, print('  '),
+	print(' The Partial Evaluator based on Characteristic Atoms and Global Trees'),nl,nl,
 	print_claus_database_status,nl,
 	print(' Start system with "ecce --help" to get help on command-line non-interactive use.'),nl,
 	print(' Command Summary for interactive mode:'),nl,
@@ -462,14 +521,14 @@ action(104,P) :- /* h for help */
 	print('  i: Insert specialised program into clause database'),nl,
 	expert_print('  k: execute benchmarK Set(from special file)'),expert_nl,
 	print('  l: List clause database'),nl,
-	print('  o: turn type checking Off'),nl,
+	print('  o: turn type checking Off'),nl,                                       %doesnt work
 	print('  p: Partially evaluate an atom or goal'),nl,
 	print('  r: Read clauses into database'),nl,
 	print('  s: Set Parameters'),nl,
 	print('  v: set user expert leVel on/off'),nl,
 	print('  w: Write specialised program to file'),nl,
-    print('  W: Write specialised program as Isabelle theory file'),nl, /* eld */
-	print('  x: eXit (also a and q)'),nl,
+    print('  W: Write specialised program as Isabelle theory file'),nl, % eld
+	print('  q: quit '),nl,
 	print('  ----------------------------------- '),nl,
 	expert_print('  a: toggle treatment of open predicates'),expert_nl,
 	print('  d: Determinate (post-)unfolding'),nl,
@@ -481,7 +540,9 @@ action(104,P) :- /* h for help */
 	expert_print('  u: manual Unfold'),expert_nl,
 	expert_print('  y: redundant argument filtering (RAF) analYsis'),expert_nl,
 	expert_print('  z: FAR (reversed RAF) analysis'),expert_nl,
+	print('  x: Print Database imformation'), nl,
 	(exec_mode(interactive)->front_end(P);true).
+*/
 
 :- set_prolog_flag(multi_arity_warnings,on).
 
