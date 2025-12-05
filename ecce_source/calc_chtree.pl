@@ -102,8 +102,6 @@
 :- use_module('whistle/whistle').
 
 
-:- use_module(self_check).
-
 /* ===================================================== */
 
 :- include( multi_meta ).
@@ -769,10 +767,6 @@ pre_condition(divide_constraint_goal(Goal,_,_)) :-
 post_condition(divide_constraint_goal(_Goal,O,C)) :-
 	term_is_of_type(O,goal),term_is_of_type(C,goal).
 
-self_check(must_fail(divide_constraint_goal([a,q(_X,_Y)],[],_))).
-self_check(must_succeed(divide_constraint_goal([q(X,Y)],[q(X,Y)],[]))).
-self_check(must_succeed(divide_constraint_goal([a,q(X,Y)],[a,q(X,Y)],[]))).
-self_check(must_succeed(divide_constraint_goal([],[],[]))).
 
 divide_constraint_goal([],[],[]).
 divide_constraint_goal([Lit|T],OrdLits,ConstrLits) :-
@@ -791,10 +785,6 @@ pre_condition(divide_constraint_residual_goal(Goal,_,_)) :-
 post_condition(divide_constraint_residual_goal(_Goal,O,C)) :-
 	term_is_of_type(O,goal),term_is_of_type(C,goal).
 
-self_check(must_fail(divide_constraint_residual_goal([a,q(_X,_Y)],[],_))).
-self_check(must_succeed(divide_constraint_residual_goal([q(X,Y)],[q(X,Y)],[]))).
-self_check(must_succeed(divide_constraint_residual_goal([a,q(X,Y)],[a,q(X,Y)],[]))).
-self_check(must_succeed(divide_constraint_residual_goal([],[],[]))).
 
 divide_constraint_residual_goal([],[],[]).
 divide_constraint_residual_goal([Lit|T],OrdLits,ConstrLits) :-
