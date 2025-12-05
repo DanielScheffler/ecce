@@ -1,4 +1,10 @@
-:- module(flow_analysis,_).
+:- module(flow_analysis, [abstract_partial_deduction_enabled/1,
+                            flow_analysis/1,
+                            find_unimposed_cinstance/3,
+                            get_cinstance_of/5,
+                            instance_is_ok/3]).
+
+:- ensure_loaded('../sicstus_expansion').
 
 :- use_package( .('../ecce_no_rt2') ).
 
@@ -21,7 +27,7 @@
 
 :- use_module('../global_tree').
 :- use_module('../calc_chtree').
-:- use_module('../main_functions').
+%:- use_module('../main_functions').
 %:- use_module(calc_chtree).
 :- use_module(calc_chtree_pd).
 
@@ -30,11 +36,11 @@
 
 /* ===================================================== */
 
-
+/*
 :- multifile gt_node/1,gt_node_goal/2,gt_node_constraint/2,
              gt_node_bup_cas/3,gt_node_descends_from/3,
              gt_node_instance_of/2,gt_node_chtree/2,gt_node_pe_status/2,
-	       gt_node_user_info/2.
+	         gt_node_user_info/2.
 
 :- dynamic gt_node/1.
 :- dynamic gt_node_goal/2.
@@ -45,7 +51,7 @@
 :- dynamic gt_node_chtree/2.
 :- dynamic gt_node_pe_status/2.
 :- dynamic gt_node_user_info/2.
-
+*/
 /* ===================================================== */
 
 
@@ -109,9 +115,9 @@ td_cflow_analysis(Count) :-
 	     print('+'), debug_nl
 	    )
          ;  (pp_cll(whistle(GoalID,Goal,Chtree,WhistleGoalID))
-	         -> (debug_println(abstracting(WhistleGoalID))),
+	         -> (debug_println(abstracting(WhistleGoalID)),
 	             abstract_and_replace(GoalID,Goal,Chtree,WhistleGoalID,ImpStat),
-	             debug_println(done_abstracting),
+	             debug_println(done_abstracting)
 	            )
 	        ;  (pp_mnf(mark_gt_node_as_ped(GoalID,pe(ImpStat),Chtree)),
 	            debug_println(adding_leaves),
@@ -119,13 +125,14 @@ td_cflow_analysis(Count) :-
 	            debug_println(done_adding_leaves),
 		        verbose_print('.')
 		       )
-	     )
+		    )
 	 ),!,
 	 debug_nl,debug_println('...'),
 	td_cflow_analysis(NewCount).
 td_cflow_analysis(_) :- nl.
 
 
+%Wird niergendswo benutzt? TODO
 flow_analysis(C) :-
        print_gt_node_bup,
        reset_bup_msg_changed,
@@ -152,9 +159,7 @@ find_unimposed_cinstance(GoalID,Goal,Constraint,VariantID) :-
 		/* otherwise chtree might be incorrect */
 	gt_node_constraint(VariantID,(MoreGeneralGoal,MC)),
 	pp_cll(constraint_instance_of(Goal,Constraint,MoreGeneralGoal,MC)).
-	
-	
-	
+
 
 
 /* --------- For Abstract Partial Deduction: -------------- */
