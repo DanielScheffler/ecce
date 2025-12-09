@@ -70,9 +70,13 @@ main(Inputs) :-
          ; set_exec_mode(compiled), ecce_compiled(Inputs)
         ).
 
-ecce :- main([]).
+% Starting Point for the Ecce System
+ecce :-
+    main([]).
 
+% Starting Point for the Ecce Tests
 run_tests :-
+    use_module('tests/test_runner'),
     perform_plunit_tests.
 
 ecce_interactive :-
@@ -330,7 +334,6 @@ front_end([A|P]) :-
     ;  format('Unknown command \'~w\', try "ecce h" or "ecce ?" for help',[Action]),nl
     ).
 
-%TODO
 list_database :-	
 	claus_database:claus(Nr,Head,Body),
 	print(Nr),print(': '),
@@ -350,8 +353,9 @@ action(X):- action(X,[]).
 action(10,P) :- % newline 
    front_end(P).
 action(13,P) :- front_end(P).
-action(63,P) :- action_print_help(P).         /* ? for help  */
-action(68,_) :-                            /* D for Database Information */
+action(63,P) :-                             /* ? for help  */
+    action_print_help(P).
+action(68,_) :-                             /* D for Database Information */
     print_claus_database_status, front_end(P).
 action(87,P) :-                             /* eld: W for Write to Isabelle file */
     print_specialised_program_isa,
@@ -377,7 +381,8 @@ action(102,P) :-                            /* f choose a file for Output*/
 	set_output_to_file_int(RR),front_end(PP).
 action(103,P):-                             /* g for print global tree */
 	print('Global Tree:'),nl,print_gt_nodes, front_end(P).
-action(104,P) :- action_print_help(P).         /* h for help */
+action(104,P) :-                             /* h for help */
+    action_print_help(P).
 action(105,P):-                             /* i for insert specialised program into clause db */
 	copy_specialised_program_to_input,
 	print_claus_database_status,
@@ -436,6 +441,7 @@ action(114,P):-                             /* r for read in file into clause da
 	; true ),
 	(P=[]-> read(R),PP=[] ; P=[R|PP]),
 	(R=l -> Filename = Last ;  Filename = R),
+	print(R),nl,
 	safe_front_end_read_in_file(Filename),
 	front_end(PP).
 action(115,P):-                             /* s for set parameters */
