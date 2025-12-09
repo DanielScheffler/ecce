@@ -35,7 +35,6 @@ ecce_type(elementary_simplified_constraint,term(ecce_type,[nonvar,var])).
 
 
 :- use_module(parametric_files).
-:- use_module('tests/test_runner').
 
 
 :- include('front_end.pl').
