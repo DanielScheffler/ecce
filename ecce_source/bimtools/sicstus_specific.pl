@@ -240,7 +240,13 @@ strict_instance_of(Goal1,Goal2) :-
 	\+(subsumes_term(CGoal,Goal2)).
   
 ecce_put(X) :- put_code(X).
-ecce_get(Ascii) :- get_code(Ascii).
+ecce_get(Ascii) :-
+    get_code(Ascii),
+	peek_code(Next),
+	(Next == 10
+	-> get_code(_)
+	; true
+	).
 
 
 /* from File: sp4_compatibility_mappings.pl */
