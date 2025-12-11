@@ -204,12 +204,12 @@ not(Goal) :- \+(Goal).
 % Gets switched to sicstus_specific through term expansions
 :- include('bimtools/ciao_specific.pl').
 
-:- include('bimtools/gensym.pl').
-:- include('bimtools/msg.pl').
+:- use_module('bimtools/gensym.pl').
+:- use_module('bimtools/msg.pl').
 :- use_module('bimtools/claus_database.pl').
 :- use_module('bimtools/stdlists.pl').
-:- include('bimtools/bd_findall.pl').
-:- include('bimtools/typechecker.pl').
-:- include('bimtools/prepost.pl').
-:- include('bimtools/debugging.pl').
-:- include('bimtools/html_output.pl').
+:- use_module('bimtools/bd_findall.pl').
+:- use_module('bimtools/typechecker.pl').
+:- use_module('bimtools/prepost.pl').
+:- use_module('bimtools/debugging.pl').
+:- use_module('bimtools/html_output.pl').

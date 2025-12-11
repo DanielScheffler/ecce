@@ -1,3 +1,4 @@
+:- module(bd_findall, [init_bd_findall/0, bd_findall/3, critical_bd_findall_nesting/0]).
 /* ------------ */
 /* bd_findall/3 */
 /* ------------ */

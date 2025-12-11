@@ -1,4 +1,16 @@
-
+:- module(debugging, [debug_printing/1,
+                        set_debug_printing_value/1,
+                        set_debug_printing/1,
+                        debug_print/1,
+                        debug_nl/0,
+                        trace_printing/1,
+                        set_trace_printing_value/1,
+                        trace_print/1,
+                        trace_nl/0,
+                        set_verbose_printing/1,
+                        verbose_print/1,
+                        verbose_println/1,
+                        verbose_nl/0]).
 /* ----------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,96,97 */
 /* ----------------------------------------- */
@@ -70,7 +82,7 @@ set_debug_printing(NewVal) :-
 /* debug_print/1 */
 /* ------------- */
 
-debug_print(X) :-
+debug_print(X) :-       %TODO
 	debug_printing(on),!,
 	print(X).
 debug_print(_X).

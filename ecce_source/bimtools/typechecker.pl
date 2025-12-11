@@ -1,4 +1,4 @@
-
+:- module(typechecker, [term_is_of_type/2, term_is_of_type/3, safe_print_term/1, reset_type_error/0, type_error_occurred/0]).
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,1996,1997 */
 /* --------------------------------------------- */

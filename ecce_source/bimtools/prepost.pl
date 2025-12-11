@@ -1,3 +1,4 @@
+:- module(prepost, [pp_mnf/1, pp_cll/1, prepost_call/1, prepost_mnf_call/1, mnf_call/1, verify_pre/1, verify_post/1]).
 /* ----------------------------------------------------- */
 /* CHECKING PRE- AND POST-CONDITIONS FOR PREDICATE CALLS */
 /* ----------------------------------------------------- */

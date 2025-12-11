@@ -1,4 +1,14 @@
-
+:- module(html_output, [set_html/0,
+                        set_output_html/1,
+                        print_html/1,
+                        print_bold/1,
+                        print_em/1,
+                        print_green/1,
+                        print_red/1,
+                        html_begin_orange/0,
+                        html_end_color/0,
+                        newparagraph/0,
+                        newlinebreak/0]).
 /* --------------------------------------------- */
 /* (C) COPYRIGHT MICHAEL LEUSCHEL 1995,96,97,98  */
 /* --------------------------------------------- */
@@ -53,11 +63,11 @@ print_bold(X) :-
 print_em(X) :-
   print_command('EM',X).
 
-print_yellow(X) :-
+print_yellow(X) :- %Not Used
 	print_html('<font color="yellow">'),
 	print(X),
 	print_html('</font>').
-print_orange(X) :-
+print_orange(X) :- %Not Used
 	print_html('<font color="orange">'),
 	print(X),
 	print_html('</font>').
@@ -70,9 +80,9 @@ print_red(X) :-
 	print(X),
 	print_html('</font>').
 
-html_begin_yellow :- print_html('<font color="yellow">').
+html_begin_yellow :- print_html('<font color="yellow">'). %Not Used
 html_begin_orange :- print_html('<font color="orange">').
-html_begin_green :- print_html('<font color="green">').
+html_begin_green :- print_html('<font color="green">'). %Not Used
 
 html_end_color :- print_html('</font>').
 
