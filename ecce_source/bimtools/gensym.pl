@@ -10,6 +10,8 @@
 /* File: gensym.pro */
 
 
+:- ensure_loaded('../sicstus_expansion').
+:- include('ciao_specific.pl').
 /* :- ensure_consulted('$BIMTOOLS_PATH/StdLists.pro'). */
 
 /* ------ */

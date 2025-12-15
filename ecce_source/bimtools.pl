@@ -165,7 +165,6 @@
 :- use_module(library(aggregates)).
 
 
-:-include( multi_meta ).
 
 %:- dynamic spec_clause/3.
 %:- multifile spec_clause/3.
@@ -210,6 +209,8 @@ not(Goal) :- \+(Goal).
 :- use_module('bimtools/stdlists.pl').
 :- use_module('bimtools/bd_findall.pl').
 :- use_module('bimtools/typechecker.pl').
-:- use_module('bimtools/prepost.pl').
 :- use_module('bimtools/debugging.pl').
 :- use_module('bimtools/html_output.pl').
+
+% Necessary since pp_cll and pp_mnf dont work as intended
+:- include('bimtools/prepost.pl').
