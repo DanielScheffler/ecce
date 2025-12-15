@@ -89,7 +89,10 @@
 
 :- use_module(main_functions).
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
 
 :- dynamic spec_clause/3.
 
@@ -106,9 +109,9 @@ cg_filter_goal(ID,MSVCall,FiltCall) :-
 /* only run after generate_code has been run */
 
 
-pre_condition(filter_top_level_call(OrigCall,_FCall)) :-
+multi_meta:pre_condition(filter_top_level_call(OrigCall,_FCall)) :-
 	term_is_of_type(OrigCall,goal).
-post_condition(filter_top_level_call(_OrigCall,FCalls)) :-
+multi_meta:post_condition(filter_top_level_call(_OrigCall,FCalls)) :-
 	term_is_of_type(FCalls,goal).
 
 filter_top_level_call(OrigCall,FCalls) :-
@@ -513,11 +516,11 @@ extract_reverse([(F,L)|T],B,BR,E,ER) :- extract_reverse(T,[F|B],BR,[L|E],ER).
 /* resultant_body/4 */
 /* ---------------- */
 
-pre_condition(resultant_body(Chtree,GoalID,Goal,_Body)) :-
+multi_meta:pre_condition(resultant_body(Chtree,GoalID,Goal,_Body)) :-
 	term_is_of_type(Chtree,chtree),
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Goal,goal).
-post_condition(resultant_body(_Chtree,_GoalID,_Goal,Body)) :-
+multi_meta:post_condition(resultant_body(_Chtree,_GoalID,_Goal,Body)) :-
 	term_is_of_type(Body,goal).
 
 resultant_body(empty,_GoalID,_Goal,_Leaf) :- fail.
@@ -577,11 +580,11 @@ resultant_body(remove(SelLitNr,_Predicate,SubTree),GoalID,Goal,Body) :-
 /* rename_resultant_goal/4 */
 /* ----------------------- */
 
-pre_condition(rename_resultant_goal(Goal,ResultantNr,GoalID,_Body)) :-
+multi_meta:pre_condition(rename_resultant_goal(Goal,ResultantNr,GoalID,_Body)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(ResultantNr,resultant_nr),
 	term_is_of_type(GoalID,nodeid).
-post_condition(rename_resultant_goal(_Goal,_ResultantNr,_GoalID,Body)) :-
+multi_meta:post_condition(rename_resultant_goal(_Goal,_ResultantNr,_GoalID,Body)) :-
 	term_is_of_type(Body,goal).
 
 rename_resultant_goal(UPGoal,ResultantNr,GoalID,Body) :-
@@ -591,12 +594,12 @@ rename_resultant_goal(UPGoal,ResultantNr,GoalID,Body) :-
 	debug_print(rrg(Goal,Body)),debug_nl.
 
 
-pre_condition(rename_resultant_goal(Goal,Nrs,ResultantNr,GoalID,_Body)) :-
+multi_meta:pre_condition(rename_resultant_goal(Goal,Nrs,ResultantNr,GoalID,_Body)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(Nrs,list(integer)),
 	term_is_of_type(ResultantNr,resultant_nr),
 	term_is_of_type(GoalID,nodeid).
-post_condition(rename_resultant_goal(_Goal,_SelNr,_ResultantNr,_GoalID,Body)) :-
+multi_meta:post_condition(rename_resultant_goal(_Goal,_SelNr,_ResultantNr,_GoalID,Body)) :-
 	term_is_of_type(Body,goal).
 
 
@@ -697,10 +700,10 @@ cg_extract_positive_atom_or_builtin_from_literal(Atom,Atom,Ptr,Ptr).
 /* Note: might have to traverse the instance_of and abstracted_by links in the
          global tree */
 
-pre_condition(get_filtered_version(Goal,NodeID,_FilteredGoal)) :-
+multi_meta:pre_condition(get_filtered_version(Goal,NodeID,_FilteredGoal)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(NodeID,nodeid).
-post_condition(get_filtered_version(_Goal,_NodeID,FilteredGoal)) :-
+multi_meta:post_condition(get_filtered_version(_Goal,_NodeID,FilteredGoal)) :-
 	term_is_of_type(FilteredGoal,goal).
 
 get_filtered_version(Goal,NodeID,[FilteredAtom]) :-
@@ -749,10 +752,10 @@ get_filtered_goal_id(NodeID,FilteredID) :-
 /* ----------------------------------------------------------- */
 
 
-pre_condition(filter_goal(Goal,NrOfPredToGenerate,_FilteredAtom)) :-
+multi_meta:pre_condition(filter_goal(Goal,NrOfPredToGenerate,_FilteredAtom)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(NrOfPredToGenerate,integer).
-post_condition(filter_goal(_Goal,_NrOfPredToGenerate,FilteredAtom)) :-
+multi_meta:post_condition(filter_goal(_Goal,_NrOfPredToGenerate,FilteredAtom)) :-
 	term_is_of_type(FilteredAtom,nonvar).
 
 filter_goal(Goal,NrOfPredToGenerate,FilteredAtom) :-

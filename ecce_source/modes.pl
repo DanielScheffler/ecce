@@ -9,7 +9,10 @@
 % [claus_database,typechecker]
 :- use_package( .('ecce_no_rt') ).
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
 
 find_applicable_mode_declaration(H,InArgs,AnyArgs,OutArgs,DCall,DI,DO) :-
 	mode_declaration(Nr,H,InArgs,AnyArgs,OutArgs),
@@ -31,9 +34,9 @@ other_mode_declaration(Nr,H) :-
 	Nr2\=Nr.
 
 
-pre_condition(get_potential_io_args(Call,_InArgs,_OutArgs)) :-
+multi_meta:pre_condition(get_potential_io_args(Call,_InArgs,_OutArgs)) :-
 	term_is_of_type(Call,nonvar).
-post_condition(get_potential_io_args(_Call,InArgs,OutArgs)) :-
+multi_meta:post_condition(get_potential_io_args(_Call,InArgs,OutArgs)) :-
 	term_is_of_type(InArgs,nonvar),
 	term_is_of_type(OutArgs,nonvar).
 	

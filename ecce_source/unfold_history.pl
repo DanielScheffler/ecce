@@ -19,7 +19,11 @@
 
 /* file: unfold_history.pro */
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
+:- multifile multi_meta:ecce_type/2.
 
 :- use_package( .(ecce_no_rt) ).
 
@@ -30,15 +34,15 @@
 /* ++++++++++++++++ */
 /* TYPE DEFINITIONS */
 /* ++++++++++++++++ */
-ecce_type(unfold_history,list(unfold_entry)).
-ecce_type(unfold_entry,term(sel,[sel_atom,sel_pos,nr_added_atoms,det_info])).
-ecce_type(sel_atom,nonvar).
-ecce_type(sel_pos,integer).
-ecce_type(nr_added_atoms,integer).
-ecce_type(det_info,term(det,[])).
-ecce_type(det_info,term(nondet,[])).
-ecce_type(det_info,term(bi,[])).
-ecce_type(det_info,term(neg,[])).
+multi_meta:ecce_type(unfold_history,list(unfold_entry)).
+multi_meta:ecce_type(unfold_entry,term(sel,[sel_atom,sel_pos,nr_added_atoms,det_info])).
+multi_meta:ecce_type(sel_atom,nonvar).
+multi_meta:ecce_type(sel_pos,integer).
+multi_meta:ecce_type(nr_added_atoms,integer).
+multi_meta:ecce_type(det_info,term(det,[])).
+multi_meta:ecce_type(det_info,term(nondet,[])).
+multi_meta:ecce_type(det_info,term(bi,[])).
+multi_meta:ecce_type(det_info,term(neg,[])).
 /* ++++++++++++++++ */
 
 /* ----------------------- */
@@ -48,11 +52,11 @@ ecce_type(det_info,term(neg,[])).
 /* just add the number of body literals to the unfold history to be
 	able to calculate covering atoms */
 
-pre_condition(update_unfold_history(OldHist,NrOfSelLit,Body,_NewHist)) :-
+multi_meta:pre_condition(update_unfold_history(OldHist,NrOfSelLit,Body,_NewHist)) :-
 	term_is_of_type(OldHist,unfold_history),
 	term_is_of_type(NrOfSelLit,integer),
 	term_is_of_type(Body,goal).
-post_condition(update_unfold_history(_OldHist,_NrOfSelLit,_Body,NewHist)) :-
+multi_meta:post_condition(update_unfold_history(_OldHist,_NrOfSelLit,_Body,NewHist)) :-
 	term_is_of_type(NewHist,unfold_history).
 
 update_unfold_history([sel(SelAtom,SelPos,0,DI)|Rest],
@@ -66,9 +70,9 @@ update_unfold_history([sel(SelAtom,SelPos,0,DI)|Rest],
 /* ---------- */
 
 
-pre_condition(ancestor(UnfHist,_CoveringAncestor)) :-
+multi_meta:pre_condition(ancestor(UnfHist,_CoveringAncestor)) :-
 	term_is_of_type(UnfHist,unfold_history).
-post_condition(ancestor(_UnfHist,CoveringAncestor)) :-
+multi_meta:post_condition(ancestor(_UnfHist,CoveringAncestor)) :-
 	term_is_of_type(CoveringAncestor,literal).
 
 ancestor([sel(AncSelLit,_Pos,_AddedLits,_DI)|_Rest],AncSelLit).
@@ -83,10 +87,10 @@ ancestor([sel(_SomeAncSelLit,_Pos,_AddedLits,_DI)|Rest],AncSelLit) :-
 /* succeeds once for every covering ancestor of the literal SelAtom
    which is at position SelPos */
 
-pre_condition(covering_ancestor(SelPos,UnfHist,_CoveringAncestor)) :-
+multi_meta:pre_condition(covering_ancestor(SelPos,UnfHist,_CoveringAncestor)) :-
 	term_is_of_type(UnfHist,unfold_history),
 	term_is_of_type(SelPos,integer).
-post_condition(covering_ancestor(_SelPos,_UnfHist,CoveringAncestor)) :-
+multi_meta:post_condition(covering_ancestor(_SelPos,_UnfHist,CoveringAncestor)) :-
 	term_is_of_type(CoveringAncestor,literal).
 
 covering_ancestor(SelPos,[sel(AncSelLit,Pos,AddedLits,_DI)|_Rest],AncSelLit) :-
@@ -111,9 +115,9 @@ created_by(X,Y,Z) :-
 /* contains_non_determinate_step/1 */
 /* ------------------------------- */
 
-pre_condition(contains_non_determinate_step(UnfHist)) :-
+multi_meta:pre_condition(contains_non_determinate_step(UnfHist)) :-
 	term_is_of_type(UnfHist,unfold_history).
-post_condition(contains_non_determinate_step(_UnfHist)).
+multi_meta:post_condition(contains_non_determinate_step(_UnfHist)).
 
 contains_non_determinate_step([sel(_AncSelLit,_Pos,_AddedLits,nondet)|_Rest]).
 contains_non_determinate_step([sel(_AncSelLit,_Pos,_AddedLits,_DI)|Rest]) :-
@@ -123,9 +127,9 @@ contains_non_determinate_step([sel(_AncSelLit,_Pos,_AddedLits,_DI)|Rest]) :-
 /* contains_non_determinate_step_at_top/1 */
 /* -------------------------------------- */
 
-pre_condition(contains_non_determinate_step_at_top(UnfHist)) :-
+multi_meta:pre_condition(contains_non_determinate_step_at_top(UnfHist)) :-
 	term_is_of_type(UnfHist,unfold_history).
-post_condition(contains_non_determinate_step_at_top(_UnfHist)).
+multi_meta:post_condition(contains_non_determinate_step_at_top(_UnfHist)).
 
 contains_non_determinate_step_at_top([sel(_AncSelLit,_Pos,_AddedLits,nondet)]).
 contains_non_determinate_step_at_top([sel(_AncSelLit,_Pos,_AddedLits,DI)|Rest]) :-

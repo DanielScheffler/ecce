@@ -78,7 +78,11 @@
 :- use_module(calc_chtree).
 :- use_module(chtree_tools).
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
+:- multifile multi_meta:ecce_type/2.
 
 
 /*
@@ -98,13 +102,13 @@
 :- dynamic gt_node_pe_status/2.
 :- dynamic gt_node_user_info/2.
 
-ecce_type(goal,list(literal)).
-ecce_type(literal,nonvar).
-ecce_type(nodeid,ground).
-ecce_type(leafid,ground).
+multi_meta:ecce_type(goal,list(literal)).
+multi_meta:ecce_type(literal,nonvar).
+multi_meta:ecce_type(nodeid,ground).
+multi_meta:ecce_type(leafid,ground).
 
-pre_condition(gt_node_pe_status(_GoalID,_PEStatus)).
-post_condition(gt_node_pe_status(GoalID,PEStatus)) :-
+multi_meta:pre_condition(gt_node_pe_status(_GoalID,_PEStatus)).
+multi_meta:post_condition(gt_node_pe_status(GoalID,PEStatus)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(PEStatus,pe_status).
 
@@ -164,9 +168,9 @@ delete_gt_node(_ID).
 /* remove_gt_leaves/1 */
 /* ------------------ */
 
-pre_condition(remove_gt_leaves(GoalID)) :-
+multi_meta:pre_condition(remove_gt_leaves(GoalID)) :-
 	term_is_of_type(GoalID,nodeid).
-post_condition(remove_gt_leaves(_GoalID)).
+multi_meta:post_condition(remove_gt_leaves(_GoalID)).
 
 remove_gt_leaves(ID) :-
 	debug_print(remove_leaves(ID)),
@@ -180,8 +184,8 @@ remove_gt_leaves(_ID).
 /* get_gt_goal_to_pe/2 */
 /* ------------------- */
 
-pre_condition(get_gt_goal_to_pe(_GoalID,_Goal)).
-post_condition(get_gt_goal_to_pe(GoalID,Goal)) :-
+multi_meta:pre_condition(get_gt_goal_to_pe(_GoalID,_Goal)).
+multi_meta:post_condition(get_gt_goal_to_pe(GoalID,Goal)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Goal,goal).
 
@@ -193,8 +197,8 @@ get_gt_goal_to_pe(GoalID,Goal) :-
 /* get_gt_cgoal_to_pe/3 */
 /* ------------------- */
 
-pre_condition(get_gt_cgoal_to_pe(_GoalID,_Goal,_C)).
-post_condition(get_gt_cgoal_to_pe(GoalID,Goal,C)) :-
+multi_meta:pre_condition(get_gt_cgoal_to_pe(_GoalID,_Goal,_C)).
+multi_meta:post_condition(get_gt_cgoal_to_pe(GoalID,Goal,C)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Goal,goal),
 	term_is_of_type(C,constraint).
@@ -222,10 +226,10 @@ get_node_level(NodeID,Level) :-
 /* add_gt_root/2 */
 /* ------------- */
 
-pre_condition(add_gt_root(Goal,GoalNodeID)) :-
+multi_meta:pre_condition(add_gt_root(Goal,GoalNodeID)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(GoalNodeID,var).
-post_condition(add_gt_root(_PGoal,GoalNodeID)) :-
+multi_meta:post_condition(add_gt_root(_PGoal,GoalNodeID)) :-
 	term_is_of_type(GoalNodeID,nodeid).
 
 add_gt_root(Goal,GoalNodeID) :-
@@ -235,11 +239,11 @@ add_gt_root(Goal,GoalNodeID) :-
 /* add_gt_croot/3 */
 /* -------------- */
 
-pre_condition(add_gt_croot(Goal,Constraint,GoalNodeID)) :-
+multi_meta:pre_condition(add_gt_croot(Goal,Constraint,GoalNodeID)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(Constraint,constraint),
 	term_is_of_type(GoalNodeID,var).
-post_condition(add_gt_croot(_PGoal,_Constraint,GoalNodeID)) :-
+multi_meta:post_condition(add_gt_croot(_PGoal,_Constraint,GoalNodeID)) :-
 	term_is_of_type(GoalNodeID,nodeid).
 
 add_gt_croot(Goal,Constraint,GoalNodeID) :-
@@ -249,12 +253,12 @@ add_gt_croot(Goal,Constraint,GoalNodeID) :-
 /* add_gt_leaf/4 */
 /* ------------- */
 
-pre_condition(add_gt_leaf(ParentNodeID,LeafGoal,LeafLocalID,LeafID)) :-
+multi_meta:pre_condition(add_gt_leaf(ParentNodeID,LeafGoal,LeafLocalID,LeafID)) :-
 	term_is_of_type(ParentNodeID,nodeid),
 	term_is_of_type(LeafGoal,goal),
 	term_is_of_type(LeafLocalID,chposition),
 	term_is_of_type(LeafID,var).
-post_condition(add_gt_leaf(_ParentNodeID,_LeafGoal,_LeafLocalID,LeafID)) :-
+multi_meta:post_condition(add_gt_leaf(_ParentNodeID,_LeafGoal,_LeafLocalID,LeafID)) :-
 	term_is_of_type(LeafID,nodeid).
 
 add_gt_leaf(ParentNodeID,LeafGoal,LeafLocalID,LeafID) :-
@@ -265,13 +269,13 @@ add_gt_leaf(ParentNodeID,LeafGoal,LeafLocalID,LeafID) :-
 /* add_gt_cleaf/5 */
 /* -------------- */
 
-pre_condition(add_gt_cleaf(ParentNodeID,LeafGoal,LeafC,LeafLocalID,LeafID)) :-
+multi_meta:pre_condition(add_gt_cleaf(ParentNodeID,LeafGoal,LeafC,LeafLocalID,LeafID)) :-
 	term_is_of_type(ParentNodeID,nodeid),
 	term_is_of_type(LeafGoal,goal),
 	term_is_of_type(LeafC,constraint),
 	term_is_of_type(LeafLocalID,chposition),
 	term_is_of_type(LeafID,var).
-post_condition(add_gt_cleaf(_ParentNodeID,_LeafGoal,_C,_LeafLocalID,LeafID)) :-
+multi_meta:post_condition(add_gt_cleaf(_ParentNodeID,_LeafGoal,_C,_LeafLocalID,LeafID)) :-
 	term_is_of_type(LeafID,nodeid).
 
 add_gt_cleaf(ParentNodeID,LeafGoal,LeafC,LeafLocalID,LeafID) :-
@@ -292,18 +296,18 @@ node_is_abstracted(GoalID) :-
 /* --------------------- */
 /* mark_gt_node_as_ped/3 */
 /* --------------------- */
-ecce_type(pe_status,term(abstracted,[impose_status])).
-ecce_type(pe_status,term(no,[])).
-ecce_type(pe_status,term(pe,[impose_status])).
+multi_meta:ecce_type(pe_status,term(abstracted,[impose_status])).
+multi_meta:ecce_type(pe_status,term(no,[])).
+multi_meta:ecce_type(pe_status,term(pe,[impose_status])).
 
-ecce_type(impose_status,term(imposed,[])).
-ecce_type(impose_status,term(unimposed,[])).
+multi_meta:ecce_type(impose_status,term(imposed,[])).
+multi_meta:ecce_type(impose_status,term(unimposed,[])).
 
-ecce_type(ext_chtree,term(none,[])).
-ecce_type(ext_chtree,chtree).
+multi_meta:ecce_type(ext_chtree,term(none,[])).
+multi_meta:ecce_type(ext_chtree,chtree).
 
 
-pre_condition(mark_gt_node_as_ped(NodeID,Status,Chtree)) :-
+multi_meta:pre_condition(mark_gt_node_as_ped(NodeID,Status,Chtree)) :-
 	term_is_of_type(NodeID,nodeid),
 	term_is_of_type(Status,pe_status),
 	term_is_of_type(Chtree,ext_chtree),
@@ -313,7 +317,7 @@ pre_condition(mark_gt_node_as_ped(NodeID,Status,Chtree)) :-
 	    )
 	 ;  true
 	).
-post_condition(mark_gt_node_as_ped(_NodeID,_Status,_Chtree)).
+multi_meta:post_condition(mark_gt_node_as_ped(_NodeID,_Status,_Chtree)).
 
 mark_gt_node_as_ped(NodeID,Status,_Chtree) :-
 	retract(gt_node_pe_status(NodeID,Stat)),
@@ -331,7 +335,7 @@ mark_gt_node_as_ped(NodeID,Status,Chtree) :-
 /* mark_gt_node_as_instance_of/2 */
 /* ----------------------------- */
 
-pre_condition(mark_gt_node_as_instance_of(NodeID,InstanceOfID)) :-
+multi_meta:pre_condition(mark_gt_node_as_instance_of(NodeID,InstanceOfID)) :-
 	term_is_of_type(NodeID,nodeid),
 	term_is_of_type(InstanceOfID,nodeid),
 	((NodeID = InstanceOfID)
@@ -348,7 +352,7 @@ pre_condition(mark_gt_node_as_instance_of(NodeID,InstanceOfID)) :-
 	    )
 	 ;  true
 	).
-post_condition(mark_gt_node_as_instance_of(_NodeID,_InstanceOfID)).
+multi_meta:post_condition(mark_gt_node_as_instance_of(_NodeID,_InstanceOfID)).
 
 mark_gt_node_as_instance_of(NodeID,InstanceOfID) :-
 	assertz(gt_node_instance_of(NodeID,InstanceOfID)).
@@ -361,10 +365,10 @@ mark_gt_node_as_instance_of(NodeID,InstanceOfID) :-
 /* new_gt_node/2 */
 /* ------------- */
 
-pre_condition(new_gt_node(Goal,NodeID)) :-
+multi_meta:pre_condition(new_gt_node(Goal,NodeID)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(NodeID,var).
-post_condition(new_gt_node(_Goal,NodeID)) :-
+multi_meta:post_condition(new_gt_node(_Goal,NodeID)) :-
 	term_is_of_type(NodeID,nodeid).
 
 new_gt_node(Goal,NodeID) :-
@@ -374,11 +378,11 @@ new_gt_node(Goal,NodeID) :-
 /* new_gt_cnode/3 */
 /* -------------- */
 
-pre_condition(new_gt_cnode(Goal,Constraint,NodeID)) :-
+multi_meta:pre_condition(new_gt_cnode(Goal,Constraint,NodeID)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(Constraint,constraint),
 	term_is_of_type(NodeID,var).
-post_condition(new_gt_cnode(_Goal,_Constraint,NodeID)) :-
+multi_meta:post_condition(new_gt_cnode(_Goal,_Constraint,NodeID)) :-
 	term_is_of_type(NodeID,nodeid).
 
 new_gt_cnode(Goal,Constraint,NodeID) :-

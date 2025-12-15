@@ -273,7 +273,10 @@ dot_print_goal2(X) :- print(X).
 /* print_chtree_for_dot/2 */
 /* ---------------------- */
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
 
 
 print_chtree_for_dot(Chtree,Goal,ID) :-
@@ -289,11 +292,11 @@ print_chtree_for_dot(_Chtree,_Goal,_ID) :-
     print('   }'),nl.
     */
 
-pre_condition(print_chtree_for_dot2(Chtree,Goal,ID)) :-
+multi_meta:pre_condition(print_chtree_for_dot2(Chtree,Goal,ID)) :-
 	term_is_of_type(Chtree,chtree),
 	term_is_of_type(Goal,goal),
 	ground(ID).
-post_condition(print_chtree_for_dot2(_Chtree,_Goal,_)).
+multi_meta:post_condition(print_chtree_for_dot2(_Chtree,_Goal,_)).
 
 print_chtree_for_dot2(empty,_Goal,_) :- fail.
 print_chtree_for_dot2(success,_Goal,_).

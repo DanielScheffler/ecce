@@ -104,7 +104,11 @@
 
 /* ===================================================== */
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
+:- multifile multi_meta:ecce_type/2.
 
 /* ===================================================== */
 
@@ -120,17 +124,17 @@
 /* ++++++++++++++++ */
 /* TYPE DEFINITIONS */
 /* ++++++++++++++++ */
-ecce_type(selected_literal_nr,integer).
-ecce_type(clause_nr,integer).
-ecce_type(chtree,term(success,[])).
-ecce_type(chtree,term(stop,[])).
-ecce_type(chtree,term(empty,[])).
-ecce_type(chtree,term(select,[selected_literal_nr,list(chpath)])).
-ecce_type(chtree,term(remove,[selected_literal_nr,predicate,children])).
-ecce_type(chtree,term(built_in_eval,[selected_literal_nr,predicate,children])).
+multi_meta:ecce_type(selected_literal_nr,integer).
+multi_meta:ecce_type(clause_nr,integer).
+multi_meta:ecce_type(chtree,term(success,[])).
+multi_meta:ecce_type(chtree,term(stop,[])).
+multi_meta:ecce_type(chtree,term(empty,[])).
+multi_meta:ecce_type(chtree,term(select,[selected_literal_nr,list(chpath)])).
+multi_meta:ecce_type(chtree,term(remove,[selected_literal_nr,predicate,children])).
+multi_meta:ecce_type(chtree,term(built_in_eval,[selected_literal_nr,predicate,children])).
 /* ecce_type(chtree,term(built_in_simplify,[selected_literal_nr,predicate,children])). */
-ecce_type(chpath,term(match,[clause_nr,children])).
-ecce_type(children,chtree).
+multi_meta:ecce_type(chpath,term(match,[clause_nr,children])).
+multi_meta:ecce_type(children,chtree).
 /* ++++++++++++++++ */
 
 
@@ -139,10 +143,10 @@ ecce_type(children,chtree).
 /* calculate_chtree/3 */
 /* ------------------ */
 
-pre_condition(calculate_chtree(GoalID,Goal,_Chtree)) :-
+multi_meta:pre_condition(calculate_chtree(GoalID,Goal,_Chtree)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Goal,goal).
-post_condition(calculate_chtree(_GoalID,_Goal,Chtree)) :-
+multi_meta:post_condition(calculate_chtree(_GoalID,_Goal,Chtree)) :-
 	term_is_of_type(Chtree,chtree).
 
 calculate_chtree(GoalID,Goal,PrunedChtree) :- 
@@ -167,11 +171,11 @@ one_step_unfolding(_GoalID,Goal,Chtree) :-
 /* calc_chtree/3 */
 /* ------------- */
 
-pre_condition(calc_chtree(G,TopGoalVarlist,UnfHist,_Chtree)) :-
+multi_meta:pre_condition(calc_chtree(G,TopGoalVarlist,UnfHist,_Chtree)) :-
 	term_is_of_type(G,goal),
 	term_is_of_type(TopGoalVarlist,list(any)),
 	term_is_of_type(UnfHist,unfold_history).
-post_condition(calc_chtree(_G,TopGoalVarlist,_UnfHist,Chtree)) :-
+multi_meta:post_condition(calc_chtree(_G,TopGoalVarlist,_UnfHist,Chtree)) :-
 	term_is_of_type(TopGoalVarlist,list(any)),
 	term_is_of_type(Chtree,chtree).
 
@@ -292,13 +296,13 @@ select_redundant_literal([H|T],NrOfNL,SelectedLit,Prev) :-
 /* calc_chpath/5 */
 /* ------------- */
 
-pre_condition(calc_chpath(G,TopGoalVarlist,Nr,UnfHist,_Chpath)) :-
+multi_meta:pre_condition(calc_chpath(G,TopGoalVarlist,Nr,UnfHist,_Chpath)) :-
 	term_is_of_type(G,goal),
 	term_is_of_type(TopGoalVarlist,list(any)),
 	(G=[] -> print('### Warning goal for calc_chpath is []') ; true),
 	term_is_of_type(Nr,integer),
 	term_is_of_type(UnfHist,unfold_history).
-post_condition(calc_chpath(_G,TopGoalVarlist,_Nr,_UnfHist,Chpath)) :-
+multi_meta:post_condition(calc_chpath(_G,TopGoalVarlist,_Nr,_UnfHist,Chpath)) :-
 	term_is_of_type(TopGoalVarlist,list(any)),
 	term_is_of_type(Chpath,chpath).
 
@@ -395,12 +399,12 @@ print_chpaths([match(Nr,Chtree)|Rest],Level) :-
 	print_chpaths(Rest,Level).
 
 
-ecce_type(sint,term(0,[])).
-ecce_type(sint,term(s,[sint])).
+multi_meta:ecce_type(sint,term(0,[])).
+multi_meta:ecce_type(sint,term(s,[sint])).
 
-pre_condition(indent(X)) :-
+multi_meta:pre_condition(indent(X)) :-
 	term_is_of_type(X,sint).
-post_condition(indent(_X)).
+multi_meta:post_condition(indent(_X)).
 
 /* indent(X) :- term_is_of_type(X,sint),fail. */
 
@@ -420,9 +424,9 @@ indent(s(X)) :- print('| '),indent(X).
 /* detect dead postitive literals and return the dead literal (+ pos) */
 /*  (a positive literal is dead if it doesn't match any clause) */
 
-pre_condition(dead_positive_literal(Goal,_Literal,_NrOfSelLiteral)) :-
+multi_meta:pre_condition(dead_positive_literal(Goal,_Literal,_NrOfSelLiteral)) :-
 	term_is_of_type(Goal,goal).
-post_condition(dead_positive_literal(_Goal,Literal,NrOfSelLiteral)) :-
+multi_meta:post_condition(dead_positive_literal(_Goal,Literal,NrOfSelLiteral)) :-
 	term_is_of_type(Literal,nonvar),
 	term_is_of_type(NrOfSelLiteral,integer).
 
@@ -440,9 +444,9 @@ dead_positive_literal(Goal,Literal,NrOfSelLiteral) :-
 
 /* detect dead negative literals and return the dead literal (+ pos) */
 
-pre_condition(dead_negative_literal(Goal,_Literal,_NrOfSelLiteral)) :-
+multi_meta:pre_condition(dead_negative_literal(Goal,_Literal,_NrOfSelLiteral)) :-
 	term_is_of_type(Goal,goal).
-post_condition(dead_negative_literal(_Goal,Literal,NrOfSelLiteral)) :-
+multi_meta:post_condition(dead_negative_literal(_Goal,Literal,NrOfSelLiteral)) :-
 	term_is_of_type(Literal,nonvar),
 	term_is_of_type(NrOfSelLiteral,integer).
 
@@ -461,9 +465,9 @@ dead_negative_literal(Goal,Literal,NrOfSelLiteral) :-
 /* detect dead built-in literals and return the dead literal (+ pos) */
 /*  (a built-in is dead if it can be evaluated and fails) */
 
-pre_condition(dead_built_in(Goal,_Literal,_NrOfSelLiteral)) :-
+multi_meta:pre_condition(dead_built_in(Goal,_Literal,_NrOfSelLiteral)) :-
 	term_is_of_type(Goal,goal).
-post_condition(dead_built_in(_Goal,Literal,NrOfSelLiteral)) :-
+multi_meta:post_condition(dead_built_in(_Goal,Literal,NrOfSelLiteral)) :-
 	term_is_of_type(Literal,nonvar),
 	term_is_of_type(NrOfSelLiteral,integer).
 
@@ -503,9 +507,9 @@ live(Goal) :-
 /* tests wheter a given goal is undeterminate for a given
 	selected literal */
 
-pre_condition(undeterminate(Goal,_NrOfSel)) :-
+multi_meta:pre_condition(undeterminate(Goal,_NrOfSel)) :-
 	term_is_of_type(Goal,goal).
-post_condition(undeterminate(_Goal,NrOfSel)) :-
+multi_meta:post_condition(undeterminate(_Goal,NrOfSel)) :-
 	term_is_of_type(NrOfSel,integer).
 
 undeterminate(Goal,NrOfSel) :- 
@@ -533,9 +537,9 @@ undeterminate(Goal,NrOfSel) :-
 /* tests wheter a given goal matches a rule (i.e. non-fact) for a given
 	selected literal */
 
-pre_condition(has_matching_rule(Goal,_NrOfSel)) :-
+multi_meta:pre_condition(has_matching_rule(Goal,_NrOfSel)) :-
 	term_is_of_type(Goal,goal).
-post_condition(has_matching_rule(_Goal,NrOfSel)) :-
+multi_meta:post_condition(has_matching_rule(_Goal,NrOfSel)) :-
 	term_is_of_type(NrOfSel,integer).
 
 has_matching_rule(Goal,NrOfSel) :-
@@ -589,9 +593,9 @@ make_list_of_vars([_H|T],[_|VT]) :- make_list_of_vars(T,VT).
 /* goal_increasing_selection/2 */
 /* --------------------------- */
 
-pre_condition(goal_increasing_selection(Goal,_NrOfSel)) :-
+multi_meta:pre_condition(goal_increasing_selection(Goal,_NrOfSel)) :-
 	term_is_of_type(Goal,goal).
-post_condition(goal_increasing_selection(_Goal,NrOfSel)) :-
+multi_meta:post_condition(goal_increasing_selection(_Goal,NrOfSel)) :-
 	term_is_of_type(NrOfSel,integer).
 
 goal_increasing_selection(Goal,NrOfSel) :-
@@ -616,15 +620,15 @@ goal_increasing_selection(Goal,NrOfSel) :-
 /*          NEGATIVE and BUILT-IN LITERALS          */
 /* ================================================ */
 
-ecce_type(literal,nonvar).
+multi_meta:ecce_type(literal,nonvar).
 
 /* --------------------------------- */
 /* goal_contains_undefined_literal/1 */
 /* --------------------------------- */
 
-pre_condition(goal_contains_undefined_literal(Goal)) :-
+multi_meta:pre_condition(goal_contains_undefined_literal(Goal)) :-
 	term_is_of_type(Goal,goal).
-post_condition(goal_contains_undefined_literal(_Goal)).
+multi_meta:post_condition(goal_contains_undefined_literal(_Goal)).
 
 goal_contains_undefined_literal([H|_T]) :-
 	is_undefined_literal(H),!.
@@ -635,9 +639,9 @@ goal_contains_undefined_literal([_H|T]) :-
 /* is_undefined_literal/1 */
 /* --------------------- */
 
-pre_condition(is_undefined_literal(Literal)) :-
+multi_meta:pre_condition(is_undefined_literal(Literal)) :-
 	term_is_of_type(Literal,literal).
-post_condition(is_undefined_literal(_Literal)).
+multi_meta:post_condition(is_undefined_literal(_Literal)).
 
 is_undefined_literal(CLiteral) :-
 	peel_off_calls(CLiteral,Literal),
@@ -660,9 +664,9 @@ generate_variables([_H|T],[_Var|VT]) :-
 /* is_negative_literal/2 */
 /* --------------------- */
 
-pre_condition(is_negative_literal(Literal,_Atom)) :-
+multi_meta:pre_condition(is_negative_literal(Literal,_Atom)) :-
 	term_is_of_type(Literal,literal).
-post_condition(is_negative_literal(_Literal,Atom)) :-
+multi_meta:post_condition(is_negative_literal(_Literal,Atom)) :-
 	term_is_of_type(Atom,nonvar).
 
 is_negative_literal(Literal,Atom) :-
@@ -675,9 +679,9 @@ is_negative_literal(Literal,Atom) :-
 /* is_built_in_literal/1 */
 /* --------------------- */
 
-pre_condition(is_built_in_literal(Literal)) :-
+multi_meta:pre_condition(is_built_in_literal(Literal)) :-
 	term_is_of_type(Literal,literal).
-post_condition(is_built_in_literal(_Literal)).
+multi_meta:post_condition(is_built_in_literal(_Literal)).
 
 is_built_in_literal('!').
 is_built_in_literal('='(_X,_Y)).
@@ -762,9 +766,9 @@ keep_constraint_literal_in_residual_program(clpfd:'ax+y=t'(_,_,_,_)) :-
 /* divide_constraint_goal/3 */
 /* ------------------------ */
 
-pre_condition(divide_constraint_goal(Goal,_,_)) :-
+multi_meta:pre_condition(divide_constraint_goal(Goal,_,_)) :-
 	term_is_of_type(Goal,goal).
-post_condition(divide_constraint_goal(_Goal,O,C)) :-
+multi_meta:post_condition(divide_constraint_goal(_Goal,O,C)) :-
 	term_is_of_type(O,goal),term_is_of_type(C,goal).
 
 
@@ -780,9 +784,9 @@ divide_constraint_goal([Lit|T],OrdLits,ConstrLits) :-
 /* divide_constraint_residual_goal/3 */
 /* ------------------------ */
 
-pre_condition(divide_constraint_residual_goal(Goal,_,_)) :-
+multi_meta:pre_condition(divide_constraint_residual_goal(Goal,_,_)) :-
 	term_is_of_type(Goal,goal).
-post_condition(divide_constraint_residual_goal(_Goal,O,C)) :-
+multi_meta:post_condition(divide_constraint_residual_goal(_Goal,O,C)) :-
 	term_is_of_type(O,goal),term_is_of_type(C,goal).
 
 
@@ -822,9 +826,9 @@ ecce_call(X) :- print(ecce_call(X)),call(X),print('@'),nl.
 /* is_callable_built_in_literal/1 */
 /* ------------------------------ */
 
-pre_condition(is_callable_built_in_literal(Literal)) :-
+multi_meta:pre_condition(is_callable_built_in_literal(Literal)) :-
 	term_is_of_type(Literal,literal).
-post_condition(is_callable_built_in_literal(_Literal)).
+multi_meta:post_condition(is_callable_built_in_literal(_Literal)).
 
 is_callable_built_in_literal('='(_X,_Y)).
 is_callable_built_in_literal('C'(_X,_Y,_Z)).
@@ -901,9 +905,9 @@ term_list2([_H|T]) :- terminated_list(T).
 /* built_in_generates_bindings/1 */
 /* ----------------------------- */
 
-pre_condition(built_in_generates_bindings(Literal)) :-
+multi_meta:pre_condition(built_in_generates_bindings(Literal)) :-
 	term_is_of_type(Literal,literal).
-post_condition(built_in_generates_bindings(_Literal)).
+multi_meta:post_condition(built_in_generates_bindings(_Literal)).
 
 built_in_generates_bindings(X) :- var(X),!,
 	print('### Warning: variable arg for built_in_generates_bindings/1'),nl.
@@ -923,9 +927,9 @@ built_in_generates_bindings(X) :- is_constraint_literal(X).
 /* simplify_built_in_literal/2 */
 /* --------------------------- */
 
-pre_condition(simplify_built_in_literal(Literal,_SLit)) :-
+multi_meta:pre_condition(simplify_built_in_literal(Literal,_SLit)) :-
 	term_is_of_type(Literal,literal).
-post_condition(simplify_built_in_literal(_Literal,SLit)) :-
+multi_meta:post_condition(simplify_built_in_literal(_Literal,SLit)) :-
 	term_is_of_type(SLit,literal).
 
 simplify_built_in_literal(Call,Res) :-
@@ -960,8 +964,8 @@ is_calln(call(_,_,_,_,_)).
 /* get_predicate/2 */
 /* --------------- */
 
-ecce_type(predicate,term(pred,[ground,arity])).
-ecce_type(arity,integer).
+multi_meta:ecce_type(predicate,term(pred,[ground,arity])).
+multi_meta:ecce_type(arity,integer).
 
 get_predicate(Atom,pred(PredName,Arity)) :-
 	functor(Atom,PredName,Arity).
@@ -985,10 +989,10 @@ atoms_have_same_predicate(A,B,Pred) :-
 /* msg_can_be_taken/2 */
 /* ------------------ */
 
-pre_condition(msg_can_be_taken(Goal1,Goal2)) :-
+multi_meta:pre_condition(msg_can_be_taken(Goal1,Goal2)) :-
 	term_is_of_type(Goal1,goal),
 	term_is_of_type(Goal2,goal).
-post_condition(msg_can_be_taken(_Goal1,_Goal2)).
+multi_meta:post_condition(msg_can_be_taken(_Goal1,_Goal2)).
 
 msg_can_be_taken([],[]).
 msg_can_be_taken([A1|T1],[A2|T2]) :-
@@ -1010,10 +1014,10 @@ print_predicate(Pred) :-
 /* sharing/2 */
 /* --------- */
 
-pre_condition(sharing(Goal1,Goal2)) :-
+multi_meta:pre_condition(sharing(Goal1,Goal2)) :-
 	term_is_of_type(Goal1,goal),
 	term_is_of_type(Goal2,goal).
-post_condition(sharing(_Goal1,_Goal2)).
+multi_meta:post_condition(sharing(_Goal1,_Goal2)).
 
 sharing(Goal1,Goal2) :-
 	varlist(Goal1,Vars1),
@@ -1057,14 +1061,14 @@ var_can_be_added_to_subgoal(X,InGoal) :-
 /* ++++++++++++++++ */
 /* TYPE DEFINITIONS */
 /* ++++++++++++++++ */
-ecce_type(resultant_nr,integer).
-ecce_type(resultant_nr,term(abstracted,[])).
-ecce_type(chposition,term(chpos,[resultant_nr,split_indication])).
-ecce_type(chposition,term(local_root,[])).
-ecce_type(split_goal,term(split_goal,[goal,split_indication])).
-ecce_type(split_indication,list(selected_literal_nr)).
-ecce_type(split_indication,term(neg,[selected_literal_nr])).
-ecce_type(split_indication,term(built_in,[selected_literal_nr])).
+multi_meta:ecce_type(resultant_nr,integer).
+multi_meta:ecce_type(resultant_nr,term(abstracted,[])).
+multi_meta:ecce_type(chposition,term(chpos,[resultant_nr,split_indication])).
+multi_meta:ecce_type(chposition,term(local_root,[])).
+multi_meta:ecce_type(split_goal,term(split_goal,[goal,split_indication])).
+multi_meta:ecce_type(split_indication,list(selected_literal_nr)).
+multi_meta:ecce_type(split_indication,term(neg,[selected_literal_nr])).
+multi_meta:ecce_type(split_indication,term(built_in,[selected_literal_nr])).
 /* ++++++++++++++++ */
 
 
@@ -1076,10 +1080,10 @@ get_leaf(Chtree,Goal,Leaf,Chposition) :-
 /* leaf/4 */
 /* ------ */
 
-pre_condition(leaf(Chtree,Goal,_Leaf,_Chposition)) :-
+multi_meta:pre_condition(leaf(Chtree,Goal,_Leaf,_Chposition)) :-
 	term_is_of_type(Chtree,chtree),
 	term_is_of_type(Goal,goal).
-post_condition(leaf(_Chtree,_Goal,Leaf,Chposition)) :-
+multi_meta:post_condition(leaf(_Chtree,_Goal,Leaf,Chposition)) :-
 	term_is_of_type(Leaf,goal),
 	term_is_of_type(Chposition,chposition).
 
@@ -1168,9 +1172,9 @@ peel_off_calls(X,X).
 /* partition_goal/2 */
 /* ---------------- */
 
-pre_condition(partition_goal(Goal,_SplittedGoals)) :-
+multi_meta:pre_condition(partition_goal(Goal,_SplittedGoals)) :-
 	term_is_of_type(Goal,goal).
-post_condition(partition_goal(_Goal,SplittedGoals)) :-
+multi_meta:post_condition(partition_goal(_Goal,SplittedGoals)) :-
 	term_is_of_type(SplittedGoals,list(split_goal)).
 
 partition_goal([],[]) :- !.
@@ -1196,19 +1200,19 @@ get_literal_numbers([_H|T],Nr,[Nr|TN]) :-
 /*     PRE-  AND  POST-CONDITIONS FOR PARAMETRIC  PREDICATES  */
 /* ========================================================== */
 
-pre_condition(partition_goal(Goal,LiteralNrs,_SplittedGoals)) :-
+multi_meta:pre_condition(partition_goal(Goal,LiteralNrs,_SplittedGoals)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(LiteralNrs,list(integer)).
-post_condition(partition_goal(_Goal,_LiteralNrs,SplittedGoals)) :-
+multi_meta:post_condition(partition_goal(_Goal,_LiteralNrs,SplittedGoals)) :-
 	term_is_of_type(SplittedGoals,list(split_goal)).
 
 
-pre_condition(select_positive_literal(Goal,TopGoalVarlist,
+multi_meta:pre_condition(select_positive_literal(Goal,TopGoalVarlist,
 					UnfHist,_NrOfSelLiteral,_SelLit)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(TopGoalVarlist,list(any)),
 	term_is_of_type(UnfHist,unfold_history).
-post_condition(select_positive_literal(_Goal,TopGoalVarlist,
+multi_meta:post_condition(select_positive_literal(_Goal,TopGoalVarlist,
 					_UnfHist,NrOfSelLiteral,SelLit)) :-
 	term_is_of_type(NrOfSelLiteral,selected_literal_nr),
 	term_is_of_type(TopGoalVarlist,list(any)),
@@ -1217,24 +1221,24 @@ post_condition(select_positive_literal(_Goal,TopGoalVarlist,
 	\+(pp_cll(is_built_in_literal(SelLit))).
 
 
-pre_condition(more_specific_transformation(Goal)) :-
+multi_meta:pre_condition(more_specific_transformation(Goal)) :-
 	term_is_of_type(Goal,goal).
-post_condition(more_specific_transformation(Goal)) :-
+multi_meta:post_condition(more_specific_transformation(Goal)) :-
 	term_is_of_type(Goal,goal).
 
 
-pre_condition(post_prune_chtree(Goal,Chtree,_PrunedChtree)) :-
+multi_meta:pre_condition(post_prune_chtree(Goal,Chtree,_PrunedChtree)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(Chtree,chtree).
-post_condition(post_prune_chtree(_Goal,_Chtree,PrunedChtree)) :-
+multi_meta:post_condition(post_prune_chtree(_Goal,_Chtree,PrunedChtree)) :-
 	term_is_of_type(PrunedChtree,chtree).
 
 
-ecce_type(neg_solve_solution,term(success,[])).
-ecce_type(neg_solve_solution,term(fail,[])).
-ecce_type(neg_solve_solution,term(unknown,[])).
+multi_meta:ecce_type(neg_solve_solution,term(success,[])).
+multi_meta:ecce_type(neg_solve_solution,term(fail,[])).
+multi_meta:ecce_type(neg_solve_solution,term(unknown,[])).
 
-pre_condition(neg_solve(Goal,_Solution)) :-
+multi_meta:pre_condition(neg_solve(Goal,_Solution)) :-
 	term_is_of_type(Goal,goal).
-post_condition(neg_solve(_Goal,Solution)) :-
+multi_meta:post_condition(neg_solve(_Goal,Solution)) :-
 	term_is_of_type(Solution,neg_solve_solution).

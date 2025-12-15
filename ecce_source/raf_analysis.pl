@@ -49,7 +49,10 @@
 
 :- use_module(dynpreds).
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
 
 
 /* file: raf-analysis.pro */
@@ -216,9 +219,9 @@ l_erase_literal([H|T],[EH|ET]) :-
 	l_erase_literal(T,ET).
 
 
-pre_condition(erase_literal(X,_Res)) :-
+multi_meta:pre_condition(erase_literal(X,_Res)) :-
 	term_is_of_type(X,literal).
-post_condition(erase_literal(_X,Res)) :-
+multi_meta:post_condition(erase_literal(_X,Res)) :-
 	term_is_of_type(Res,literal).
 
 erase_literal(X,Res) :-

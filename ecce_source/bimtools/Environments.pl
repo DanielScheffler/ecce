@@ -7,23 +7,27 @@
 
 /* ===================================================== */
 
-:- include( '../multi_meta' ).
+:- use_module('../multi_meta').
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
+:- multifile multi_meta:ecce_type/2.
 
 /* ===================================================== */
 
 
 
-ecce_type(st_lup_binding,term('/',[st_lup_key,st_lup_val])).
-ecce_type(st_lup_key,nonvar).
-ecce_type(st_lup_val,nonvar).
-ecce_type(st_lup_env,list(st_lup_binding)).
+multi_meta:ecce_type(st_lup_binding,term('/',[st_lup_key,st_lup_val])).
+multi_meta:ecce_type(st_lup_key,nonvar).
+multi_meta:ecce_type(st_lup_val,nonvar).
+multi_meta:ecce_type(st_lup_env,list(st_lup_binding)).
 
 
 
-pre_condition(store(Env,Key,_Value,_NewEnv)) :-
+multi_meta:pre_condition(store(Env,Key,_Value,_NewEnv)) :-
         term_is_of_type(Env,st_lup_env),
         term_is_of_type(Key,st_lup_key).
-post_condition(store(_Env,_Key,_Value,NewEnv)) :-
+multi_meta:post_condition(store(_Env,_Key,_Value,NewEnv)) :-
         term_is_of_type(NewEnv,st_lup_env).
 
 store([],Key,Value,[Key/Value]).
@@ -34,10 +38,10 @@ store([Key2/Value2|T],Key,Value,[Key2/Value2|BT]) :-
 
 
    
-pre_condition(lookup(Key,Env,_Value)) :-
+multi_meta:pre_condition(lookup(Key,Env,_Value)) :-
         term_is_of_type(Env,st_lup_env),
         term_is_of_type(Key,st_lup_key).
-post_condition(lookup(_Key,_Env,_Value)).
+multi_meta:post_condition(lookup(_Key,_Env,_Value)).
         
 lookup(Key,[Key/Value|T],Value).
 lookup(Key,[Key2/Value2|T],Value) :-

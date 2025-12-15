@@ -1,10 +1,11 @@
+:- module(multi_meta, [pre_condition/1, post_condition/1, ecce_type/2]).
 
 :- if(current_prolog_flag(dialect,sicstus)).
-:- meta_predicate pre_condition(  0 ).
-:- meta_predicate post_condition( 0 ).
+    :- meta_predicate pre_condition(  0 ).
+    :- meta_predicate post_condition( 0 ).
 :- else.
-:- meta_predicate pre_condition(  goal ).
-:- meta_predicate post_condition( goal ).
+    :- meta_predicate pre_condition(  goal ).
+    :- meta_predicate post_condition( goal ).
 :- endif.
 
 :- multifile pre_condition/1.

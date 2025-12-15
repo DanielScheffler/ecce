@@ -53,7 +53,11 @@
 
 /* ===================================================== */
 
-:- include( '../multi_meta' ).
+:- use_module('../multi_meta').
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
+:- multifile multi_meta:ecce_type/2.
 
 
 /* ===================================================== */
@@ -73,11 +77,11 @@ apd(_Goal,_Constraint).
 /* calculate_chtree/4 */
 /* ------------------ */
 
-pre_condition(calculate_chtree(GoalID,Goal,Constraint,_Chtree)) :-
+multi_meta:pre_condition(calculate_chtree(GoalID,Goal,Constraint,_Chtree)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Constraint,constraint),
 	term_is_of_type(Goal,goal).
-post_condition(calculate_chtree(_GoalID,_Goal,_C,Chtree)) :-
+multi_meta:post_condition(calculate_chtree(_GoalID,_Goal,_C,Chtree)) :-
 	term_is_of_type(Chtree,chtree).
 
 calculate_chtree(GoalID,Goal,Constraint,PrunedChtree) :-
@@ -103,12 +107,12 @@ one_step_unfolding(_GoalID,Goal,Constraint,Chtree) :-
 /* calc_chtree/5 */
 /* ------------- */
 
-pre_condition(calc_chtree(G,C,TopGoalVarlist,UnfHist,_Chtree)) :-
+multi_meta:pre_condition(calc_chtree(G,C,TopGoalVarlist,UnfHist,_Chtree)) :-
 	term_is_of_type(G,goal),
 	term_is_of_type(C,constraint),
 	term_is_of_type(TopGoalVarlist,list(any)),
 	term_is_of_type(UnfHist,unfold_history).
-post_condition(calc_chtree(_G,_C,TopGoalVarlist,_UnfHist,Chtree)) :-
+multi_meta:post_condition(calc_chtree(_G,_C,TopGoalVarlist,_UnfHist,Chtree)) :-
 	term_is_of_type(TopGoalVarlist,list(any)),
 	term_is_of_type(Chtree,chtree).
 
@@ -191,14 +195,14 @@ calc_chtree([H|T],Constraint,TopGoalVarlist,UnfHist,Chtree) :-
 /* calc_chpath/6 */
 /* ------------- */
 
-pre_condition(calc_chpath(G,C,TopGoalVarlist,Nr,UnfHist,_Chpath)) :-
+multi_meta:pre_condition(calc_chpath(G,C,TopGoalVarlist,Nr,UnfHist,_Chpath)) :-
 	term_is_of_type(G,goal),
 	term_is_of_type(C,constraint),
 	term_is_of_type(TopGoalVarlist,list(any)),
 	(G=[] -> print('### Warning goal for calc_chpath is []') ; true),
 	term_is_of_type(Nr,integer),
 	term_is_of_type(UnfHist,unfold_history).
-post_condition(calc_chpath(_G,_C,TopGoalVarlist,_Nr,_UnfHist,Chpath)) :-
+multi_meta:post_condition(calc_chpath(_G,_C,TopGoalVarlist,_Nr,_UnfHist,Chpath)) :-
 	term_is_of_type(TopGoalVarlist,list(any)),
 	term_is_of_type(Chpath,chpath).
 
@@ -250,10 +254,10 @@ calc_chpath(Goal,Constraint,TopGoalVarlist,NrOfSelLiteral,UnfHist,Chpath) :-
 /* detect dead postitive literals and return the dead literal (+ pos) */
 /*  (a positive literal is dead if it doesn't match any clause) */
 
-pre_condition(dead_positive_literal(Goal,C,_Literal,_NrOfSelLiteral)) :-
+multi_meta:pre_condition(dead_positive_literal(Goal,C,_Literal,_NrOfSelLiteral)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(C,constraint).
-post_condition(dead_positive_literal(_Goal,_C,Literal,NrOfSelLiteral)) :-
+multi_meta:post_condition(dead_positive_literal(_Goal,_C,Literal,NrOfSelLiteral)) :-
 	term_is_of_type(Literal,nonvar),
 	term_is_of_type(NrOfSelLiteral,integer).
 
@@ -292,10 +296,10 @@ live(Goal,C) :-
 /* tests wheter a given goal is undeterminate for a given
 	selected literal */
 
-pre_condition(undeterminate(Goal,C,_NrOfSel)) :-
+multi_meta:pre_condition(undeterminate(Goal,C,_NrOfSel)) :-
 	term_is_of_type(Goal,goal),
 	term_is_of_type(C,constraint).
-post_condition(undeterminate(_Goal,_C,NrOfSel)) :-
+multi_meta:post_condition(undeterminate(_Goal,_C,NrOfSel)) :-
 	term_is_of_type(NrOfSel,integer).
 
 undeterminate(Goal,C,NrOfSel) :-
@@ -470,11 +474,11 @@ split_goal([H|T],N,SplitInd,Res) :-
 /* leaf/6 */
 /* ------ */
 
-pre_condition(leaf(Chtree,Goal,C,_Leaf,_LC,_Chposition,_BUPC)) :-
+multi_meta:pre_condition(leaf(Chtree,Goal,C,_Leaf,_LC,_Chposition,_BUPC)) :-
 	term_is_of_type(Chtree,chtree),
 	term_is_of_type(C,constraint),
 	term_is_of_type(Goal,goal).
-post_condition(leaf(_Chtree,_Goal,_C,Leaf,LeafC,Chposition,BUPC)) :-
+multi_meta:post_condition(leaf(_Chtree,_Goal,_C,Leaf,LeafC,Chposition,BUPC)) :-
 	term_is_of_type(Leaf,goal),
 	term_is_of_type(LeafC,constraint),
 	term_is_of_type(BUPC,constraint),
@@ -555,12 +559,12 @@ get_constraint_leaf(Goal,Constraint,Leaf,LeafC,SplitIndication,BUPC) :-
 /* get_bup_computed_answers/3 */
 /* -------------------------- */
 
-ecce_type(csplit_goal,term(split_goal,[goal,constraint,split_indication,constraint])).
+multi_meta:ecce_type(csplit_goal,term(split_goal,[goal,constraint,split_indication,constraint])).
 
-pre_condition(get_bup_computed_answers(SG,C,_BSG)) :-
+multi_meta:pre_condition(get_bup_computed_answers(SG,C,_BSG)) :-
 	term_is_of_type(SG,list(split_goal)),
 	term_is_of_type(C,constraint).
-post_condition(get_bup_computed_answers(_SG,_C,BSG)) :-
+multi_meta:post_condition(get_bup_computed_answers(_SG,_C,BSG)) :-
 	term_is_of_type(BSG,list(csplit_goal)).
 	
 	

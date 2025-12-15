@@ -31,7 +31,10 @@ post_processing/0,print_transitions/0,perform_post_processing_minimising/0,reset
 
 /* minimises the polyvariance in the global tree */
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
 
 
 :- dynamic pp_node_equivalent/2.
@@ -212,9 +215,9 @@ transition(ParID,ChildID,ChPos) :-
 /* get_real_goal_id/2 */
 /* ------------------ */
 
-pre_condition(get_real_goal_id(GoalID,_RealID)) :-
+multi_meta:pre_condition(get_real_goal_id(GoalID,_RealID)) :-
 	term_is_of_type(GoalID,nodeid).
-post_condition(get_real_goal_id(_GoalID,RealID)) :-
+multi_meta:post_condition(get_real_goal_id(_GoalID,RealID)) :-
 	term_is_of_type(RealID,nodeid).
 
 get_real_goal_id(GoalID,GoalID) :-

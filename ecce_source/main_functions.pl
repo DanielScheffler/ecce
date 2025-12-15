@@ -52,7 +52,10 @@
 :- use_module(library(dec10_io)).
 :- use_module(library(lists)).
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
 
 
 :- use_module(dynpreds).
@@ -452,13 +455,13 @@ abstract_and_replace(GoalID,Goal,Chtree,WhistleGoalID,ImpStat) :-
 
 
 
-pre_condition(add_abstractions(NewGoals,NewChtrees,GoalID)) :-
+multi_meta:pre_condition(add_abstractions(NewGoals,NewChtrees,GoalID)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(NewGoals,list(split_goal)),
 	term_is_of_type(NewChtrees,list(ext_chtree)),
 	length(NewGoals,L),
 	length(NewChtrees,L).
-post_condition(add_abstractions(_NewGoals,_NewChtrees,_GoalID)).
+multi_meta:post_condition(add_abstractions(_NewGoals,_NewChtrees,_GoalID)).
 
 add_abstractions([],[],_GoalID).
 add_abstractions([split_goal(NewGoal,SplitInd)|T],[NewChtree|CT],GoalID) :-
@@ -476,18 +479,18 @@ add_abstractions([split_goal(NewGoal,SplitInd)|T],[NewChtree|CT],GoalID) :-
 /*     PRE-  AND  POST-CONDITIONS FOR PARAMETRIC  PREDICATES  */
 /* ========================================================== */
 
-pre_condition(get_instance_of(GoalID,Goal,Chtree,_MoreGeneralID)) :-
+multi_meta:pre_condition(get_instance_of(GoalID,Goal,Chtree,_MoreGeneralID)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Goal,goal),
 	term_is_of_type(Chtree,chtree).
-post_condition(get_instance_of(_GoalID,_Goal,_Chtree,MoreGeneralID)) :-
+multi_meta:post_condition(get_instance_of(_GoalID,_Goal,_Chtree,MoreGeneralID)) :-
 	term_is_of_type(MoreGeneralID,nodeid).
 
-pre_condition(whistle(GoalID,Goal,Chtree,_WhistleGoalID)) :-
+multi_meta:pre_condition(whistle(GoalID,Goal,Chtree,_WhistleGoalID)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Goal,goal),
 	term_is_of_type(Chtree,chtree).
-post_condition(whistle(_GoalID,_Goal,_Chtree,WhistleGoalID)) :-
+multi_meta:post_condition(whistle(_GoalID,_Goal,_Chtree,WhistleGoalID)) :-
 	term_is_of_type(WhistleGoalID,nodeid),
 	(gt_node_pe_status(WhistleGoalID,no)
 	 -> print('### WARNING: whistle returns non-partially evaluated goal'),
@@ -496,26 +499,26 @@ post_condition(whistle(_GoalID,_Goal,_Chtree,WhistleGoalID)) :-
 	).
 
 
-pre_condition(abstract_parent(GoalID,Goal,Chtree,WhistleGoalID,
+multi_meta:pre_condition(abstract_parent(GoalID,Goal,Chtree,WhistleGoalID,
 						_NewGoals,_NewChtrees)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Goal,goal),
 	term_is_of_type(Chtree,chtree),
 	term_is_of_type(WhistleGoalID,nodeid).
-post_condition(abstract_parent(_GoalID,_Goal,_Chtree,_WhistleGoalID,
+multi_meta:post_condition(abstract_parent(_GoalID,_Goal,_Chtree,_WhistleGoalID,
 						NewGoals,NewChtrees)) :-
 	term_is_of_type(NewGoals,list(split_goal)),
 	term_is_of_type(NewChtrees,list(ext_chtree)),
 	length(NewGoals,L),
 	length(NewChtrees,L).
 
-pre_condition(abstract_leaf(GoalID,Goal,Chtree,WhistleGoalID,
+multi_meta:pre_condition(abstract_leaf(GoalID,Goal,Chtree,WhistleGoalID,
 						_NewGoals,_NewChtrees)) :-
 	term_is_of_type(GoalID,nodeid),
 	term_is_of_type(Goal,goal),
 	term_is_of_type(Chtree,chtree),
 	term_is_of_type(WhistleGoalID,nodeid).
-post_condition(abstract_leaf(_GoalID,_Goal,_Chtree,_WhistleGoalID,
+multi_meta:post_condition(abstract_leaf(_GoalID,_Goal,_Chtree,_WhistleGoalID,
 						NewGoals,NewChtrees)) :-
 	term_is_of_type(NewGoals,list(split_goal)),
 	term_is_of_type(NewChtrees,list(ext_chtree)),

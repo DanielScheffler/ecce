@@ -40,16 +40,20 @@
 :- use_module(calc_chtree).
 :- use_module('more_specific/more_specific').
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
+:- multifile multi_meta:ecce_type/2.
 
 /* --------------------------- */
 /* remove_incorrect_builtins/3 */
 /* --------------------------- */
 
-pre_condition(remove_incorrect_builtins(Chtree1,Goal,_Chtree2)) :-
+multi_meta:pre_condition(remove_incorrect_builtins(Chtree1,Goal,_Chtree2)) :-
 	term_is_of_type(Chtree1,chtree),
 	term_is_of_type(Goal,goal).
-post_condition(remove_incorrect_builtins(_Chtree1,_Goal,Chtree2)) :-
+multi_meta:post_condition(remove_incorrect_builtins(_Chtree1,_Goal,Chtree2)) :-
 	term_is_of_type(Chtree2,chtree).
 
 /* remove those built-ins that by abstraction become no longer
@@ -105,9 +109,9 @@ remove_incorrect_builtins_chpaths([match(Nr,Chtree)|Rest],Left,Sel,Right,
 /* has_builtins_which_generate_bindings/1 */
 /* -------------------------------------- */
 
-pre_condition(has_builtins_which_generate_bindings(Chtree1)) :-
+multi_meta:pre_condition(has_builtins_which_generate_bindings(Chtree1)) :-
 	term_is_of_type(Chtree1,chtree).
-post_condition(has_builtins_which_generate_bindings(_Chtree1)).
+multi_meta:post_condition(has_builtins_which_generate_bindings(_Chtree1)).
 
 
 has_builtins_which_generate_bindings(select(_SelLitNr,Chpaths)) :-
@@ -130,10 +134,10 @@ has_builtins_which_generate_bindings_chpaths([match(_Nr,Chtree)|Rest]) :-
 /* msg_chtree/3 */
 /* ------------ */
 
-pre_condition(msg_chtree(Chtree1,Chtree2,_PChtreeMSG)) :-
+multi_meta:pre_condition(msg_chtree(Chtree1,Chtree2,_PChtreeMSG)) :-
 	term_is_of_type(Chtree1,chtree),
 	term_is_of_type(Chtree2,chtree).
-post_condition(msg_chtree(_Chtree1,_Chtree2,PChtreeMSG)) :-
+multi_meta:post_condition(msg_chtree(_Chtree1,_Chtree2,PChtreeMSG)) :-
 	term_is_of_type(PChtreeMSG,chtree).
 
 
@@ -147,8 +151,8 @@ msg_chtree(Chtree1,Chtree2,PChtreeMSG) :-
 
 
 
-pre_condition(prune_off_chtree(_Chtree,_PChtree)).
-post_condition(prune_off_chtree(_Chtree,PChtree)) :-
+multi_meta:pre_condition(prune_off_chtree(_Chtree,_PChtree)).
+multi_meta:post_condition(prune_off_chtree(_Chtree,PChtree)) :-
 	term_is_of_type(PChtree,chtree).
 
 prune_off_chtree(X,stop) :- var(X),!.
@@ -260,10 +264,10 @@ trans_paths([match(Nr,Chtree)|Rest],[match(Nr,HChtree)|HRest]) :-
 /* ===================================== */
 
 
-pre_condition(precise_msg_chtree(Chtree1,Chtree2,_PChtreeMSG)) :-
+multi_meta:pre_condition(precise_msg_chtree(Chtree1,Chtree2,_PChtreeMSG)) :-
 	term_is_of_type(Chtree1,chtree),
 	term_is_of_type(Chtree2,chtree).
-post_condition(precise_msg_chtree(_Chtree1,_Chtree2,PChtreeMSG)) :-
+multi_meta:post_condition(precise_msg_chtree(_Chtree1,_Chtree2,PChtreeMSG)) :-
 	term_is_of_type(PChtreeMSG,chtree).
 
 
@@ -278,20 +282,20 @@ precise_msg_chtree(Chtree1,Chtree2,PChtreeMSG) :-
 /* transform_chtree_into_chterm */
 /* ---------------------------- */
 
-ecce_type(chterm,term(empty,[])).
-ecce_type(chterm,term(success,[])).
-ecce_type(chterm,term(stop,[term(success,[])])).
-ecce_type(chterm,term(nomatch,[])).
-ecce_type(chterm,term(select,[selected_literal_nr,match_term])).
-ecce_type(chterm,term(remove,[selected_literal_nr,predicate,chterm])).
-ecce_type(chterm,term(built_in_eval,[selected_literal_nr,predicate,chterm])).
+multi_meta:ecce_type(chterm,term(empty,[])).
+multi_meta:ecce_type(chterm,term(success,[])).
+multi_meta:ecce_type(chterm,term(stop,[term(success,[])])).
+multi_meta:ecce_type(chterm,term(nomatch,[])).
+multi_meta:ecce_type(chterm,term(select,[selected_literal_nr,match_term])).
+multi_meta:ecce_type(chterm,term(remove,[selected_literal_nr,predicate,chterm])).
+multi_meta:ecce_type(chterm,term(built_in_eval,[selected_literal_nr,predicate,chterm])).
 
-ecce_type(match_term,nonvar).
+multi_meta:ecce_type(match_term,nonvar).
 
 
-pre_condition(transform_chtree_into_chterm(Chtree,_Chterm)) :-
+multi_meta:pre_condition(transform_chtree_into_chterm(Chtree,_Chterm)) :-
 	term_is_of_type(Chtree,chtree).
-post_condition(transform_chtree_into_chterm(_Chtree,Chterm)) :-
+multi_meta:post_condition(transform_chtree_into_chterm(_Chtree,Chterm)) :-
 	term_is_of_type(Chterm,chterm).
 	/* print(transform_chtree_into_chterm(Chtree,Chterm)),nl. */
 
@@ -362,8 +366,8 @@ replace_in_match_list(Nr,ChTerm,[Nr2|R],[M|RestM],[M|RRestM]) :-
 
 
 
-pre_condition(transform_chterm_into_chtree(_Chterm,_Chtree)).
-post_condition(transform_chterm_into_chtree(_Chterm,Chtree)) :-
+multi_meta:pre_condition(transform_chterm_into_chtree(_Chterm,_Chtree)).
+multi_meta:post_condition(transform_chterm_into_chtree(_Chterm,Chtree)) :-
 	term_is_of_type(Chtree,chtree).
 
 transform_chterm_into_chtree(X,stop) :- var(X),!.
@@ -406,9 +410,9 @@ transform_subchterms_into_path([CNr|RestC],[Chterm|RestChterms],Paths) :-
 
 /* ---------------------------------------------------------- */
 
-pre_condition(calc_pruning_factor(Chtree,_PF)) :-
+multi_meta:pre_condition(calc_pruning_factor(Chtree,_PF)) :-
 	term_is_of_type(Chtree,chtree).
-post_condition(calc_pruning_factor(_Chtree,PF)) :-
+multi_meta:post_condition(calc_pruning_factor(_Chtree,PF)) :-
 	term_is_of_type(PF,real).
 
 	

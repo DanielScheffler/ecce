@@ -17,15 +17,18 @@
 
 /* file: depth_bound.pro */
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
 
 /* ============================================================ */
 /*                        Depth-Bound Stuff                     */
 /* ============================================================ */
 
-pre_condition(depth_bound_ok(L)) :-
+multi_meta:pre_condition(depth_bound_ok(L)) :-
 	term_is_of_type(L,unfold_history).
-post_condition(depth_bound_ok(_L)).
+multi_meta:post_condition(depth_bound_ok(_L)).
 
 depth_bound_ok(L) :-
 	current_depth_bound(DB),

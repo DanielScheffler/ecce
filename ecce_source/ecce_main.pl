@@ -11,7 +11,9 @@
 
 :- use_module(library(dec10_io)).
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:ecce_type/2.
 
 
 /* file: ecce_main.pro */
@@ -27,11 +29,11 @@
 :- use_module(main_functions).
 
 /* :- use_module('constraints'). */
-ecce_type(constraint,list(elementary_constraint)).
-ecce_type(constraint,term(fail,[])).
-ecce_type(elementary_constraint,term(ecce_type,[nonvar,any])).
-ecce_type(simplified_constraint,list(elementary_simplified_constraint)).
-ecce_type(elementary_simplified_constraint,term(ecce_type,[nonvar,var])).
+multi_meta:ecce_type(constraint,list(elementary_constraint)).
+multi_meta:ecce_type(constraint,term(fail,[])).
+multi_meta:ecce_type(elementary_constraint,term(ecce_type,[nonvar,any])).
+multi_meta:ecce_type(simplified_constraint,list(elementary_simplified_constraint)).
+multi_meta:ecce_type(elementary_simplified_constraint,term(ecce_type,[nonvar,var])).
 
 
 :- use_module(parametric_files).

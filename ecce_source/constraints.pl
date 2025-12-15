@@ -43,18 +43,22 @@
 
 /* ===================================================== */
 
-:- include( multi_meta ).
+:- use_module(multi_meta).
+
+:- multifile multi_meta:pre_condition/1.
+:- multifile multi_meta:post_condition/1.
+:- multifile multi_meta:ecce_type/2.
 
 /* ===================================================== */
 
 /* ++++++++++++++++ */
 /* TYPE DEFINITIONS */
 /* ++++++++++++++++ */
-ecce_type(constraint,list(elementary_constraint)).
-ecce_type(constraint,term(fail,[])).
-ecce_type(elementary_constraint,term(ecce_type,[nonvar,any])).
-ecce_type(simplified_constraint,list(elementary_simplified_constraint)).
-ecce_type(elementary_simplified_constraint,term(ecce_type,[nonvar,var])).
+multi_meta:ecce_type(constraint,list(elementary_constraint)).
+multi_meta:ecce_type(constraint,term(fail,[])).
+multi_meta:ecce_type(elementary_constraint,term(ecce_type,[nonvar,any])).
+multi_meta:ecce_type(simplified_constraint,list(elementary_simplified_constraint)).
+multi_meta:ecce_type(elementary_simplified_constraint,term(ecce_type,[nonvar,var])).
 
 
 /* TYPE CHECKING PART */
@@ -84,10 +88,10 @@ check_condition([ecce_type(Type,X)|T]) :-
 /* constraint_union/3 */
 /* ------------------ */
 
-pre_condition(constraint_union(C,C2,_)) :-
+multi_meta:pre_condition(constraint_union(C,C2,_)) :-
 	term_is_of_type(C,constraint),
 	term_is_of_type(C2,constraint).
-post_condition(constraint_union(_C,_C2,R)) :-
+multi_meta:post_condition(constraint_union(_C,_C2,R)) :-
 	term_is_of_type(R,constraint).
 
 constraint_union(fail,_,fail) :- !.
@@ -101,12 +105,12 @@ constraint_union(C1,C2,R) :-
 /* constraint_msg/6 */
 /* ---------------- */
 
-pre_condition(constraint_msg(G,C,G2,C2,_,_)) :-
+multi_meta:pre_condition(constraint_msg(G,C,G2,C2,_,_)) :-
 	term_is_of_type(C,constraint),
 	term_is_of_type(C2,constraint),
 	term_is_of_type(G,goal),
 	term_is_of_type(G2,goal).
-post_condition(constraint_msg(_G,_C,_G2,_C2,R,RC)) :-
+multi_meta:post_condition(constraint_msg(_G,_C,_G2,_C2,R,RC)) :-
 	term_is_of_type(RC,constraint),
 	term_is_of_type(R,goal).
 
@@ -120,12 +124,12 @@ constraint_msg(G1,C1,G2,C2,GMSG,CMSG) :-
 /* constraint_instance_of/4 */
 /* ------------------------ */
 
-pre_condition(constraint_instance_of(G,C,G2,C2)) :-
+multi_meta:pre_condition(constraint_instance_of(G,C,G2,C2)) :-
 	term_is_of_type(C,constraint),
 	term_is_of_type(C2,constraint),
 	term_is_of_type(G,goal),
 	term_is_of_type(G2,goal).
-post_condition(constraint_instance_of(_G,_C,_G2,_C2)).
+multi_meta:post_condition(constraint_instance_of(_G,_C,_G2,_C2)).
 
 
 constraint_instance_of(Goal,Constraint,MoreGeneralGoal,MC) :-
@@ -142,9 +146,9 @@ constraint_instance_of(Goal,Constraint,MoreGeneralGoal,MC) :-
 /* simplify_constraint/2 */
 /* --------------------- */
 
-pre_condition(simplify_constraint(C,_SC)) :-
+multi_meta:pre_condition(simplify_constraint(C,_SC)) :-
 	term_is_of_type(C,constraint).
-post_condition(simplify_constraint(_C,SC)) :-
+multi_meta:post_condition(simplify_constraint(_C,SC)) :-
 	term_is_of_type(SC,constraint).
 
 simplify_constraint([],[]).
@@ -169,9 +173,9 @@ satisfiable(Constraint) :-
 /*  project_constraint/3 */
 /* --------------------- */
 
-pre_condition(project_constraint(C,_G,_SC)) :-
+multi_meta:pre_condition(project_constraint(C,_G,_SC)) :-
 	term_is_of_type(C,constraint).
-post_condition(project_constraint(_C,_G,SC)) :-
+multi_meta:post_condition(project_constraint(_C,_G,SC)) :-
 	term_is_of_type(SC,constraint).
 
 project_constraint(fail,_H,fail).
@@ -185,9 +189,9 @@ project_constraint([C|Cs],H,Constraint) :-
 /*  project_constraint/4 */
 /* --------------------- */
 
-pre_condition(project_simplified_constraint(C,_G,_SC,_Rem)) :-
+multi_meta:pre_condition(project_simplified_constraint(C,_G,_SC,_Rem)) :-
 	term_is_of_type(C,simplified_constraint).
-post_condition(project_simplified_constraint(_C,_G,SC,Rem)) :-
+multi_meta:post_condition(project_simplified_constraint(_C,_G,SC,Rem)) :-
 	term_is_of_type(SC,constraint),
 	term_is_of_type(Rem,constraint).
 
