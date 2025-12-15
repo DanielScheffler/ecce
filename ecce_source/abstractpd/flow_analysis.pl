@@ -31,7 +31,6 @@
 %:- use_module(calc_chtree).
 :- use_module(calc_chtree_pd).
 
-:- include( '../multi_meta' ).
 
 
 /* ===================================================== */

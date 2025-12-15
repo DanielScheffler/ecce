@@ -43,8 +43,6 @@
 
 /* file: benchmark.pro */
 
-:- include( multi_meta ).
-
 expand_path('$BENCH_DIR/',Dir) :-
 	ecce_benchmark_directory(Dir).
 expand_path('$ECCE_SPEC_DIR/',SDir) :-

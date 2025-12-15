@@ -25,7 +25,6 @@
 %:- dynamic spec_clause/3.
 
 
-:- include( multi_meta ).
 
 
 /* file: dead_code_elimination.pro */
