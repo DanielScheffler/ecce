@@ -1,75 +1,35 @@
-:- if(current_prolog_flag(version_data,sicstus(3,_,_,_,_))).
+:- module(sicstus_specific, [consult_without_redefine_warning/1,
+						    transform_dcg_term/2,
+                            max/3,
+                            please/2,
+                            rerecord/3,
+                            namevars/4,
+                            hide/0,
+                            is_inf/1,
+                            varlist/2,
+                            stop/0,
+                            time/2,
+                            time/1,
+                            copy/2,
+                            variant_of/2,
+                            instance_of/2,
+                            strict_instance_of/2,
+                            ecce_put/1,
+                            ecce_get/1,
+                            call_residue/2,
+                            filter_residue_vars/2,
+                            read_term_with_lines/3,
+                            retractall_fact/1,
+                            ecce_source_directory/1,
+                            ecce_benchmark_directory/1,
+                            string_concatenate/3,
+                            ensure_consulted/1,
+                            ecce_reconsult/1,
+                            ecce_compile/1,
+                            ecce_use_module/1,
+                            ecce_use_module/3,
+                            convert_cli_into_atom/2]).
 
-	:- module(sicstus_specific, [consult_without_redefine_warning/1,
-						transform_dcg_term/2,
-						max/3,
-						please/2,
-						rerecord/3,
-						namevars/4,
-						hide/0,
-						is_inf/1,
-						varlist/2,
-						varlist2/3,
-						add_var/3,
-						l_varlist2/3,
-						stop/0,
-						time/2,
-						time/1,
-						copy/2,
-						variant_of/2,
-						instance_of/2,
-						strict_instance_of/2,
-						ecce_put/1,
-						ecce_get/1,
-						read_term_with_lines/3,
-						retractall_fact/1,
-						ecce_source_directory/1,
-						ecce_benchmark_directory/1,
-						string_concatenate/3,
-						ensure_consulted/1,
-						ecce_reconsult/1,
-						ecce_compile/1,
-						ecce_use_module/1,
-						ecce_use_module/3,
-						convert_cli_into_atom/2
-						]).
-
-:- else. 
-
-	:- module(sicstus_specific, [consult_without_redefine_warning/1,
-						transform_dcg_term/2,
-						max/3,
-						please/2,
-						rerecord/3,
-						namevars/4,
-						hide/0,
-						is_inf/1,
-						varlist/2,
-						stop/0,
-						time/2,
-						time/1,
-						copy/2,
-						variant_of/2,
-						instance_of/2,
-						strict_instance_of/2,
-						ecce_put/1,
-						ecce_get/1,
-						call_residue/2,
-						filter_residue_vars/2,
-						read_term_with_lines/3,
-						retractall_fact/1,						
-						ecce_source_directory/1,
-						ecce_benchmark_directory/1,
-						string_concatenate/3,
-						ensure_consulted/1,
-						ecce_reconsult/1,
-						ecce_compile/1,
-						ecce_use_module/1,
-						ecce_use_module/3,
-						convert_cli_into_atom/2
-						]).
-
-:- endif.
 
 :- use_module(library(system)).
 :- use_module(library(lists)).
@@ -108,19 +68,12 @@ ecce_use_module(File,A1,A2) :-
 	use_module(CF,A1,A2).
 
 
-:- if(current_prolog_flag(version_data,sicstus(3,_,_,_,_))).
-	:- use_module(library(charsio),[read_from_chars/2]).
-		convert_cli_into_atom(CLIGOAL,Atom) :-
-			name(CLIGOAL,AsciiL),
-			add_dot(AsciiL,AL2),
-			read_from_chars(AL2,Atom).
-:- else.
-	:- use_module(library(codesio),[read_from_codes/2]).
-		convert_cli_into_atom(CLIGOAL,Atom) :-
-			name(CLIGOAL,AsciiL),
-			add_dot(AsciiL,AL2),
-			read_from_codes(AL2,Atom).
-:- endif.
+
+:- use_module(library(codesio),[read_from_codes/2]).
+	convert_cli_into_atom(CLIGOAL,Atom) :-
+		name(CLIGOAL,AsciiL),
+		add_dot(AsciiL,AL2),
+		read_from_codes(AL2,Atom).
 
 /* sicstus_specific.pro */
 
@@ -154,27 +107,8 @@ hide.
 :- use_module(library(terms)).
 is_inf(X) :- cyclic_term(X).
 
-:- if(current_prolog_flag(version_data,sicstus(3,_,_,_,_))).
-/* Sicstus 3 version: term_variables does not keep variables in order */
-varlist(T,VList) :- varlist2(T,[],VList).
 
-varlist2(X,L,R) :- ground(X),!,L=R.
-varlist2(X,L,R) :- var(X),!,
-   add_var(L,X,R).
-varlist2(X,L,R) :- nonvar(X),X=..[_F|Args],!,
-  l_varlist2(Args,L,R).
-varlist2(_X,L,L) :- print('*** unknown termtype in varlist2'),nl.
-
-add_var([],X,[X]).
-add_var([H|T],X,Res) :-
-  (X==H -> Res = [H|T] ; Res = [H|T2], add_var(T,X,T2)).
-
-l_varlist2([],L,L).
-l_varlist2([X|T],L,R) :- 
-	varlist2(X,L,L2), l_varlist2(T,L2,R).
-:- else.
 varlist(T,VList) :- term_variables(T,VList).
-:- endif.
 
 stop :- halt.
 
@@ -193,38 +127,11 @@ time(Goal) :-
 
 copy(C,CC) :- copy_term(C,CC).
 
-/* From: StdLists.pro */
-
-% length([],0).
-% length([_H|T],L) :-
-% 	length(T,LT),
-% 	L is LT + 1.
-
-% reverse([],L,L).
-% reverse([H|T],Acc,Res) :-
-% 	reverse(T,[H|Acc],Res).
 
 
 /* From: instance.pro */
 
 
-:- if(current_prolog_flag(version_data,sicstus(3,_,_,_,_))).
-variant_of(Goal,UIGoal) :-
-	copy(Goal,CGoal),
-	variant(UIGoal,CGoal).
-
-instance_of(Goal,UIGoal) :- 
-	copy(Goal,CGoal),
-	subsumes_chk(UIGoal,CGoal).
-
-strict_instance_of(Goal1,Goal2) :-
-	copy(Goal1,CGoal),
-	subsumes_chk(Goal2,CGoal),
-	\+(subsumes_chk(CGoal,Goal2)).
-	
-ecce_put(X) :- put(X).
-ecce_get(Ascii) :- get(Ascii).
-:- else.
 :- use_module(library(terms),[variant/2]).
 variant_of(Goal,UIGoal) :-
 	copy(Goal,CGoal),
@@ -261,7 +168,7 @@ filter_residue_vars([H|T],Res) :-
   frozen(H,FH),
   (FH=true -> Res=RT ; Res = [FH|RT]),
   filter_residue_vars(T,RT).
-:- endif.
+
 
 
 
@@ -281,9 +188,5 @@ get_end_of_layout([_|T],R) :- get_end_of_layout(T,R).
 
 retractall_fact( X ) :-
 	retractall( X ).
-
-:- if(current_prolog_flag(version_data,sicstus(3,_,_,_,_))).
-
-:- endif.
 
 :- use_module('../constraints/constraints_clpfd').

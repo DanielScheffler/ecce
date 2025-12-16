@@ -188,14 +188,9 @@ unsafe_erasure(SubTerm,Head,_Body) :-
 	!, /* unsafe to erase if occurs in erased head */
 	debug_print(head_occ).
 
-:- if(current_prolog_flag(version_data,sicstus(4,_,_,_,_))).
-:- use_module(library(terms),[contains_var/2]).
-variable_occurs_at_least_once(V,Term) :-
-    contains_var(V,Term).
-:- else.
+
 variable_occurs_at_least_once(V,Term) :-
    variable_occurs(V,Term,Nr), Nr>0.
-:- endif.
 
 variable_occurs(V,T,Nr) :-
 	V==T,!, Nr=1.

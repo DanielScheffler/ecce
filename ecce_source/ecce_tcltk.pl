@@ -21,11 +21,6 @@
 :- use_module(library(random)).
 :- use_module(library(system),[]).
 
-:- if(current_prolog_flag(version_data,sicstus(3,_,_,_,_))).
-:- initialization(system:environ('ECCE_SOURCE',_R)).
-:- initialization(system:working_directory(_,_R)). % is now current_directory in SICS 4 in file_systems
-:- endif.
-
 portray_message(informational, _).
 runtime_entry(start) :- go.
 main :- go.
