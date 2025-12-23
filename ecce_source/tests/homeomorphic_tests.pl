@@ -3,6 +3,10 @@
 :- use_module(library(plunit)).
 :- use_module('../homeomorphic').
 
+/* ------------------------------------------------ */
+/* testfile for predicates from file homeomporphic  */
+/* ------------------------------------------------ */
+
 :- begin_tests(homeomorphic_embedded_conjunction).
 
     test(homeomorphic_embedded_conjunction1, [fail]) :-
@@ -30,6 +34,7 @@
         homeomorphic_embedded_conjunction([q(a,Y)],[q(b,Y),q(a,Y),q(c,Y)]).
 
 :- end_tests(homeomorphic_embedded_conjunction).
+
 
 :- begin_tests(homeomorphic_embedded).
 
@@ -79,6 +84,7 @@
         homeomorphic_embedded(q(_X,Y),q(Y,f(_X))).
 
 :- end_tests(homeomorphic_embedded).
+
 
 run_homeomorphic(Passed, Failed) :-
     run_tests([homeomorphic_embedded_conjunction,homeomorphic_embedded], [passed(Passed), failed(Failed)]).

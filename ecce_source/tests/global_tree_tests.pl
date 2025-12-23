@@ -4,6 +4,9 @@
 :- use_module('../global_tree').
 :- use_module('../bimtools', [pp_mnf/1]).
 
+/* ---------------------------------------------- */
+/* testfile for predicates from file global_tree  */
+/* ---------------------------------------------- */
 
 :- begin_tests(global_tree).
 
@@ -24,6 +27,7 @@
         (get_gt_cgoal_to_pe(_GID,G,C), C=[],G = [q(Z),r(Z)]).
 
 :- end_tests(global_tree).
+
 
 run_global_tree(Passed, Failed) :-
     run_tests([global_tree], [passed(Passed), failed(Failed)]).

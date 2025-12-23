@@ -3,6 +3,10 @@
 :- use_module(library(plunit)).
 :- use_module('../calc_chtree').
 
+/* ---------------------------------------------- */
+/* testfile for predicates from file calc_chtree  */
+/* ---------------------------------------------- */
+
 :- begin_tests(divide_constraint_goal).
 
     test(divide_constraint_goal1, [fail]) :-

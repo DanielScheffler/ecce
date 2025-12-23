@@ -4,6 +4,9 @@
 :- use_module('../constraints').
 :- use_module('../bimtools', [pp_mnf/1, pp_cll/1]).
 
+/* ---------------------------------------------- */
+/* testfile for predicates from file constraints  */
+/* ---------------------------------------------- */
 
 :- begin_tests(constraint_instance_of).
 

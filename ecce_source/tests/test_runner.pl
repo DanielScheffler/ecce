@@ -9,6 +9,9 @@
 :- use_module('calc_chtree_tests').
 :- use_module('global_tree_tests').
 
+/* ------------------------ */
+/* Running all plunit Tests */
+/* ------------------------ */
 perform_plunit_tests :-
     run_homeomorphic(Passed1, Failed1),
     run_bimtools(Passed2, Failed2),

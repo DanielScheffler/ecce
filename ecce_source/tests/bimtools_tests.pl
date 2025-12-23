@@ -3,6 +3,9 @@
 :- use_module(library(plunit)).
 :- use_module('../bimtools').
 
+/* ------------------------------------------------ */
+/* testfile for predicates from directory bimtools  */
+/* ------------------------------------------------ */
 
 :- begin_tests(variant_of).
 
