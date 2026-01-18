@@ -123,51 +123,39 @@
 		ecce_benchmark_directory/1,
 		not/1
 ]).
+% Gets switched to sicstus_specific through term expansions
+:- include('bimtools/ciao_specific.pl').
+
+:- use_module('bimtools/debugging.pl').
+:- use_module('bimtools/msg.pl').
+:- use_module('bimtools/gensym.pl').
+:- use_module('bimtools/claus_database.pl').
+:- use_module('bimtools/stdlists.pl').
+:- use_module('bimtools/bd_findall.pl').
+:- use_module('bimtools/typechecker.pl').
+:- use_module('bimtools/html_output.pl').
 
 
 % FOR CIAO!
 % DTM: KEEP like this becaus the sicstus expansion has to eliminate them!
 
 :- if(\+ current_prolog_flag(dialect,sicstus)).
-%:- export( string_concatenate/3).
-% :- export( transform_dcg_term/2).
-% :- export( please/2).
-% :- export( rerecord/3).
-% :- export( namevars/4).
-% :- export( max/3).
-% :- export( varlist/2).
-% :- export( stop/0).
-% :- export( time/2).
-% :- export( time/1).
-%:- export( copy/2).
-:- export( on_exception/3).
-:- export( expand_term/2).
-:- export( ecce_source_directory/1).
-%:- export( ecce_benchmark_directory/1).
-% :- export( instance_of/2).
-% :- export( is_inf/1).
-% :- export( variant_of/2).
-% :- export( strict_instance_of/2).
-:- export( same_length/2).
+    :- use_package( .(ecce_no_rt) ).
+    :- export( on_exception/3).
+    :- export( expand_term/2).
+    :- export( ecce_source_directory/1).
+    :- export( same_length/2).
 :- endif.
 
-:- use_package( .(ecce_no_rt) ).
 
 :- set_prolog_flag(multi_arity_warnings,off).
-:- set_prolog_flag(discontiguous_warnings,off).
 :- set_prolog_flag(single_var_warnings,off).
 
-:- if(\+ current_prolog_flag(dialect,sicstus)).
 :- use_module(library(dec10_io)).
-:- endif.
 :- use_module(library(lists)).
 
 :- use_module(library(aggregates)).
 
-
-
-%:- dynamic spec_clause/3.
-%:- multifile spec_clause/3.
 
 :- use_module(dynpreds).
 :- use_module(homeomorphic).
@@ -194,23 +182,10 @@
 
 :- use_module(unfold_history).
 
-%:- use_module( engine(internals) , [term_to_meta/2,module_concat/3] ).
 
 :- meta_predicate not( goal ).
 
 not(Goal) :- \+(Goal).
 
-% Gets switched to sicstus_specific through term expansions
-:- include('bimtools/ciao_specific.pl').
-
-:- use_module('bimtools/gensym.pl').
-:- use_module('bimtools/msg.pl').
-:- use_module('bimtools/claus_database.pl').
-:- use_module('bimtools/stdlists.pl').
-:- use_module('bimtools/bd_findall.pl').
-:- use_module('bimtools/typechecker.pl').
-:- use_module('bimtools/debugging.pl').
-:- use_module('bimtools/html_output.pl').
-
-% Necessary since pp_cll and pp_mnf dont work as intended
+% Necessary to use include/1 instead of use_module/1 because of call/1
 :- include('bimtools/prepost.pl').

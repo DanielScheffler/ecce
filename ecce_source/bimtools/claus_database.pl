@@ -111,7 +111,6 @@ undeclare_database(Name) :- Name \== compat,
 */
 
 print_claus_database_status(Name) :-
-    nl,
     print('-------------------'),nl,
     print('Database Information:'),nl,
 	declared_database(Name),

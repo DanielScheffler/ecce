@@ -320,7 +320,6 @@ front_end([]) :- !,
 	prompt(_OldPrompt,''),
 	print('=> '),
 	ecce_get(AsciiChar),
-	nl,
  	(action(AsciiChar)
 	-> true
 	;  char_code(Char, AsciiChar),

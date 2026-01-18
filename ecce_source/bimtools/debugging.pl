@@ -82,7 +82,7 @@ set_debug_printing(NewVal) :-
 /* debug_print/1 */
 /* ------------- */
 
-debug_print(X) :-       %TODO
+debug_print(X) :-
 	debug_printing(on),!,
 	print(X).
 debug_print(_X).
