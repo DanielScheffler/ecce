@@ -42,4 +42,4 @@
 
 
 run_calc_chtree(Passed, Failed) :-
-    run_tests([divide_constraint_goal, divide_constraint_residual_goal], [passed(Passed), failed(Failed)]).
+    run_tests([divide_constraint_goal, divide_constraint_residual_goal], [passed(Passed), failed(Failed), quiet]).

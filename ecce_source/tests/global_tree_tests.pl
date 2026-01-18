@@ -23,11 +23,11 @@
         pp_mnf(mark_gt_node_as_ped(NodeID,pe(unimposed),stop)),
         pp_mnf(add_gt_leaf(NodeID,[q(Z),r(Z)],chpos(1,[1,2]),_LeafID))).
 
-    test(global_tree4) :-
+    test(global_tree4, [cleanup(init_gt)]) :-
         (get_gt_cgoal_to_pe(_GID,G,C), C=[],G = [q(Z),r(Z)]).
 
 :- end_tests(global_tree).
 
 
 run_global_tree(Passed, Failed) :-
-    run_tests([global_tree], [passed(Passed), failed(Failed)]).
+    run_tests([global_tree], [passed(Passed), failed(Failed), quiet]).

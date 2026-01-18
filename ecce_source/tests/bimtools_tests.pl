@@ -149,4 +149,4 @@
 
 
 run_bimtools(Passed, Failed) :-
-    run_tests([variant_of, instance_of, strict_instance_of, stdlists_exact_member, stdlists_member_nr, stdlists_split_list], [passed(Passed), failed(Failed)]).
+    run_tests([variant_of, instance_of, strict_instance_of, stdlists_exact_member, stdlists_member_nr, stdlists_split_list], [passed(Passed), failed(Failed), quiet]).

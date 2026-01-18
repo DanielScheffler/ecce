@@ -87,4 +87,4 @@
 
 
 run_homeomorphic(Passed, Failed) :-
-    run_tests([homeomorphic_embedded_conjunction,homeomorphic_embedded], [passed(Passed), failed(Failed)]).
+    run_tests([homeomorphic_embedded_conjunction,homeomorphic_embedded], [passed(Passed), failed(Failed), quiet]).

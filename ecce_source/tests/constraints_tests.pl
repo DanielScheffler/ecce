@@ -107,4 +107,4 @@
 
 
 run_constraints(Passed, Failed) :-
-    run_tests([constraint_instance_of, simplify_constraint, project_constraint, project_simplified_constraint], [passed(Passed), failed(Failed)]).
+    run_tests([constraint_instance_of, simplify_constraint, project_constraint, project_simplified_constraint], [passed(Passed), failed(Failed), quiet]).
