@@ -1,4 +1,4 @@
-:- module( 'partition.common' , _ ).
+:- module( 'partition.common' , [get_block/7] ).
 
 
 get_block([],[],_InBlockSoFar,[],[],[],[]).
